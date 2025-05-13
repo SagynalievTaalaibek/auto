@@ -1,22 +1,30 @@
 'use client';
 
 import MenuIcon from '@mui/icons-material/Menu';
+import { styled } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { ROUTES } from '@/config/constants';
+import { ROUTES, ROUTE_URL } from '@/config/constants';
+
+const NavLinkButton = styled(Link)(({ theme }) => ({
+	backgroundColor: theme.palette.primary.main,
+	color: '#fff',
+	textDecoration: 'none',
+	fontWeight: 600,
+	'&:hover': {
+		color: theme.palette.secondary.main,
+		fontWeight: 700,
+	},
+}));
 
 export function Header() {
 	const router = useRouter();
-
-	/*const user = useAppSelector(state => state.user);
-
-	console.log('Header', user);*/
 
 	return (
 		<Box sx={{ flexGrow: 1 }}>
@@ -45,9 +53,11 @@ export function Header() {
 						>
 							<MenuIcon />
 						</IconButton>
-						<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-							Домой
-						</Typography>
+						{ROUTE_URL.map((url, i) => (
+							<NavLinkButton key={`${i}-${url.name}`} href={url.path}>
+								{url.name}
+							</NavLinkButton>
+						))}
 						<Button
 							color="inherit"
 							variant="contained"
