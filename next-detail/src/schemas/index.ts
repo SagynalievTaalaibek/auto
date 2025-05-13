@@ -1,2 +1,2 @@
-export * from './login.schema.ts';
-export * from './register.schema.ts';
+export * from './login.schema';
+export * from './register.schema';
