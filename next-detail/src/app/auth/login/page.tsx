@@ -1,9 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-import { AuthLayout } from '@/components/auth/auth-layout';
-
-import { LoginForm } from '@/components';
+import { AuthLayout, LoginForm } from '@/components';
 import { ROUTES } from '@/config/constants';
 
 export const metadata: Metadata = {
