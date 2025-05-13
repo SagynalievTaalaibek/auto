@@ -5,8 +5,7 @@ import { Provider } from 'react-redux';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 
-import ClientLayout from '@/components/layout/client-layout';
-
+import { ClientLayout } from '@/components';
 import theme from '@/config/theme';
 import { store } from '@/store/store';
 
