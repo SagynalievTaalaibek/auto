@@ -1,7 +1,7 @@
 export type UserRole = 'REGULAR' | 'ADMIN';
 export type AuthMethod = 'CREDENTIALS' | 'GOOGLE' | 'YANDEX';
 
-export interface User {
+export interface IUser {
 	id: string;
 	email: string;
 	password: string;
@@ -31,4 +31,9 @@ export interface RegisterPayload {
 	email: string;
 	password: string;
 	passwordRepeat: string;
+}
+
+export interface UserAuth {
+	userId: string;
+	role: UserRole;
 }

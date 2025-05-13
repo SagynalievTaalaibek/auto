@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 
-import { Header } from '@/components/client';
+import { Header } from '@/components';
 
 export default function ClientLayout({
 	children,

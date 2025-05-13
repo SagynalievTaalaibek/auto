@@ -10,14 +10,13 @@ import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/navigation';
 
 import { ROUTES } from '@/config/constants';
-import { useAppSelector } from '@/store/hooks';
 
 export function Header() {
 	const router = useRouter();
 
-	const user = useAppSelector(state => state.user);
+	/*const user = useAppSelector(state => state.user);
 
-	console.log('Header', user);
+	console.log('Header', user);*/
 
 	return (
 		<Box sx={{ flexGrow: 1 }}>

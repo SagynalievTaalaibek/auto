@@ -3,7 +3,10 @@ export const BASE_URL =
 export const ROUTES = {
 	HOME: '/',
 	LOGIN: '/auth/login',
-	REGISTER: '/register',
+	REGISTER: '/auth/register',
 };
 
-export const PROTECTED_ROUTES = ['/GGG', 'GGG'];
+export const API_ROUTES = {
+	LOGIN: '/auth/login',
+	REGISTER: '/auth/register',
+};

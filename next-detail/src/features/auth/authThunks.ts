@@ -2,17 +2,16 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosError } from 'axios';
 
 import { ErrorResponse } from '@/types/error';
-import { LoginPayload, User } from '@/types/user';
 
 import axiosApi from '@/config/axioxApi';
+import { API_ROUTES } from '@/config/constants';
+import { TypeLoginSchema, TypeRegisterSchema } from '@/schemas';
 
 export const loginUser = createAsyncThunk(
 	'auth/loginUser',
-	async (credentials: LoginPayload, { rejectWithValue }) => {
+	async (data: TypeLoginSchema, { rejectWithValue }) => {
 		try {
-			const response = await axiosApi.post('/auth/login', credentials);
-			console.log('Thunks', response);
-
+			const response = await axiosApi.post(API_ROUTES.LOGIN, data);
 			return response.data;
 		} catch (error: unknown) {
 			const axiosError = error as AxiosError<ErrorResponse>;
@@ -24,12 +23,18 @@ export const loginUser = createAsyncThunk(
 	},
 );
 
-export async function getCurrentUser(): Promise<User | null> {
-	try {
-		const response = await axiosApi('/auth/me');
-		return response.data;
-	} catch (error) {
-		console.error('Error fetching current user:', error);
-		return null;
-	}
-}
+export const registerUser = createAsyncThunk(
+	'auth/registerUser',
+	async (data: TypeRegisterSchema, { rejectWithValue }) => {
+		try {
+			const response = await axiosApi.post(API_ROUTES.REGISTER, data);
+			return response.data;
+		} catch (error: unknown) {
+			const axiosError = error as AxiosError<ErrorResponse>;
+
+			return rejectWithValue(
+				axiosError.response?.data?.message || 'Register failed',
+			);
+		}
+	},
+);

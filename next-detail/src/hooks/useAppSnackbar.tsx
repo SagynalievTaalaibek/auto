@@ -5,7 +5,11 @@ import { type SnackbarKey, type VariantType, useSnackbar } from 'notistack';
 export const useAppSnackbar = () => {
 	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-	const showSnackbar = (message: string, variant: VariantType = 'default') => {
+	const showSnackbar = (
+		message: string,
+		variant: VariantType = 'default',
+		time?: number,
+	) => {
 		enqueueSnackbar(message, {
 			variant,
 			action: (key: SnackbarKey) => (
@@ -17,7 +21,7 @@ export const useAppSnackbar = () => {
 					<CloseIcon />
 				</IconButton>
 			),
-			autoHideDuration: 3000,
+			autoHideDuration: time ? time : 3000,
 		});
 	};
 

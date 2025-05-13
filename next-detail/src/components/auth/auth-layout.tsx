@@ -30,9 +30,8 @@ export function AuthLayout({
 				display: 'flex',
 				justifyContent: 'center',
 				alignItems: 'center',
-				height: 'calc(100vh - 400px)',
+				height: 'calc(100vh - 200px)',
 			}}
-			/*className="flex grow flex-col items-center pt-[200px]"*/
 		>
 			<Card sx={{ width: '100%', maxWidth: 400 }}>
 				<CardHeader

@@ -87,7 +87,6 @@ export function LoginForm() {
 				error={!!errors.email}
 				helperText={errors.email}
 				fullWidth
-				placeholder="admin@gmail.com"
 			/>
 
 			<TextField

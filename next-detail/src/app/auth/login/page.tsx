@@ -1,11 +1,14 @@
-import * as React from 'react';
-
+import { Metadata } from 'next';
 import Link from 'next/link';
 
-import { LoginForm } from '@/components/client';
-import { AuthLayout } from '@/components/client/auth/auth-layout';
+import { AuthLayout } from '@/components/auth/auth-layout';
 
+import { LoginForm } from '@/components';
 import { ROUTES } from '@/config/constants';
+
+export const metadata: Metadata = {
+	title: 'Войти в аккаунт',
+};
 
 export default function Page() {
 	return (
