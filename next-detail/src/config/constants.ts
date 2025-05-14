@@ -2,6 +2,7 @@ export const BASE_URL =
 	process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
 export const ROUTES = {
 	HOME: '/',
+	PROFILE: '/profile',
 	LOGIN: '/auth/login',
 	REGISTER: '/auth/register',
 };

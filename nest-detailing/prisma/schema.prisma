@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+
+  email    String @unique
+  password String
+  name     String
+  phone    String
+
+  role UserRole @default(REGULAR)
+
+  isVerified         Boolean @default(false) @map("is_verified")
+  isTwoFactorEnabled Boolean @default(false) @map("is_two_factor_enabled")
+
+  // Дополнительные поля
+  specialization String? // Для мастеров, например, "полировка", "химчистка"
+  avatarUrl      String? // URL аватара (если нужен)
+
+  // Связи
+  orders       Order[] @relation("Orders") // Заказы клиента
+  masterOrders Order[] @relation("Master") // Заказы, назначенные мастеру
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  Car       Car[]
+
+  @@map("users")
+}
+
+model Token {
+  id String @id @default(uuid())
+
+  email     String
+  token     String    @unique
+  type      TokenType
+  expiresIn DateTime  @map("expires_in")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("tokens")
+}
+
+enum UserRole {
+  REGULAR
+  ADMIN
+  MASTER
+}
+
+enum TokenType {
+  VERIFICATION
+  TWO_FACTOR
+  PASSWORD_RESET
+}
+
+// ЗАКАЗ
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  price       Float
+  duration    Int
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  orders Order[]
+
+  @@map("services")
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  userId String @map("user_id")
+  user   User   @relation("Orders", fields: [userId], references: [id])
+
+  carId String @map("car_id")
+  car   Car    @relation(fields: [carId], references: [id])
+
+  services   Service[]
+  status     OrderStatus @default(NEW)
+  startTime  DateTime    @map("start_time")
+  endTime    DateTime?   @map("end_time")
+  totalPrice Float?      @map("total_price")
+  notes      String? // Примечания для мастера
+
+  masterId String? @map("master_id")
+  master   User?   @relation("Master", fields: [masterId], references: [id])
+
+  photos String[] @default([]) // Ссылки на фото (например, Google Drive)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("orders")
+}
+
+// Перечисление статусов заказа
+enum OrderStatus {
+  NEW
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  PAID
+  CLOSED
+  CANCELLED
+  RESCHEDULED
+}
+
+model Car {
+  id String @id @default(uuid())
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  brand String // Марка (например, "Toyota")
+  model String // Модель (например, "Camry")
+  year  Int // Год выпуска
+  color String // Цвет
+  vin   String? @unique // VIN-номер (опционально)
+  plate String? @unique // Госномер (опционально)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Связи
+  orders Order[] // Заказы, связанные с этим авто
+
+  @@map("cars")
+}
