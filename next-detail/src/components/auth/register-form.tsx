@@ -9,10 +9,10 @@ import TextField from '@mui/material/TextField';
 
 import { registerUser } from '@/features/auth/authThunks';
 
+import { useAppDispatch } from '@/hooks/hooksStore';
 import { useAppSnackbar } from '@/hooks/useAppSnackbar';
 
 import { RegisterSchema, TypeRegisterSchema } from '@/schemas';
-import { useAppDispatch } from '@/store/hooks';
 
 export function RegisterForm() {
 	const dispatch = useAppDispatch();

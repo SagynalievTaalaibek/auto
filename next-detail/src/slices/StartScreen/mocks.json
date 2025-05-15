@@ -1,0 +1,29 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"main_title": {
+				"__TYPE__": "FieldContent",
+				"value": "product",
+				"type": "Text"
+			},
+			"second_text": {
+				"__TYPE__": "FieldContent",
+				"value": "ruler",
+				"type": "Text"
+			},
+			"description": {
+				"__TYPE__": "FieldContent",
+				"value": "vessels",
+				"type": "Text"
+			},
+			"image_url": {
+				"__TYPE__": "FieldContent",
+				"value": "suggest",
+				"type": "Text"
+			}
+		},
+		"items": []
+	}
+]
