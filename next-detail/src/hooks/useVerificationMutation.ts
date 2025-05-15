@@ -20,7 +20,7 @@ export function useVerificationMutation() {
 		mutationFn: (token: string | null) =>
 			verificationService.newVerification(token),
 		onSuccess: async response => {
-			// await dispatch(saveUser(response));
+			await dispatch(saveUser(response));
 			showSnackbar('Почта успешно подтверждена', 'success');
 			router.push(ROUTES.PROFILE);
 		},
