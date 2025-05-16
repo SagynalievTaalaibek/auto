@@ -1,0 +1,64 @@
+{
+  "id": "all_services",
+  "type": "SharedSlice",
+  "name": "ServiceItem",
+  "description": "AllServices",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "title",
+            "placeholder": ""
+          }
+        },
+        "description": {
+          "type": "Text",
+          "config": {
+            "label": "Description",
+            "placeholder": ""
+          }
+        },
+        "image_service": {
+          "type": "Image",
+          "config": {
+            "label": "image service",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
+        "button_group": {
+          "type": "Group",
+          "config": {
+            "label": "Button Group",
+            "repeat": true,
+            "fields": {
+              "button_name": {
+                "type": "Text",
+                "config": {
+                  "label": "Button Name",
+                  "placeholder": ""
+                }
+              },
+              "button_link": {
+                "type": "Text",
+                "config": {
+                  "label": "Button Link",
+                  "placeholder": ""
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

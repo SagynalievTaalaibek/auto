@@ -9,8 +9,8 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 
 import { ClientLayout } from '@/components';
+import { persistor, store } from '@/config/store/store';
 import theme from '@/config/theme';
-import { persistor, store } from '@/store/store';
 
 export function Providers({ children }: { children: React.ReactNode }) {
 	return (

@@ -5,10 +5,10 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@/prismicio';
 import { components } from '@/slices';
 
-export default async function Home() {
+export default async function Page() {
 	const client = createClient();
 	const page = await client
-		.getByUID('page', 'home', { fetchOptions: { cache: 'no-cache' } })
+		.getByUID('services', 'services', { fetchOptions: { cache: 'no-cache' } })
 		.catch(() => notFound());
 
 	return (

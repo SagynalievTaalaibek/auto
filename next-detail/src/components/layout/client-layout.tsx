@@ -14,7 +14,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<div className="client-layout">
 			<Header />
-			<main>{children}</main>
+			<div>{children}</div>
 			{/*<ClientFooter />*/}
 		</div>
 	);

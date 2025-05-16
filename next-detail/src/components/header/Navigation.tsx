@@ -11,9 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+import { useAppSelector } from '@/hooks/hooksStore';
 
 import { NAVBAR_URL, ROUTES } from '@/config/constants';
-import { useAppSelector } from '@/store/hooks';
 
 const settings = [
 	{
@@ -48,6 +50,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 export function Navigation() {
 	const user = useAppSelector(state => state.user.user);
+	const router = useRouter();
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
 		null,
 	);
@@ -80,7 +83,7 @@ export function Navigation() {
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'space-between',
-				padding: '10px 0',
+				padding: '15px 0',
 			}}
 		>
 			<Typography
@@ -205,8 +208,7 @@ export function Navigation() {
 									onClick={handleCloseUserMenu}
 								>
 									<Typography
-										component={Link}
-										href={setting.url}
+										onClick={() => router.push(setting.url)}
 										sx={{
 											textAlign: 'center',
 											textDecoration: 'none',

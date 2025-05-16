@@ -8,12 +8,12 @@ import { z } from 'zod';
 
 import { loginUser } from '@/features/auth/authThunks';
 
+import { useAppDispatch } from '@/hooks/hooksStore';
 import { useAppSnackbar } from '@/hooks/useAppSnackbar';
 
 import { LoginPayload } from '@/types/user';
 
 import { ROUTES } from '@/config/constants';
-import { useAppDispatch } from '@/store/hooks';
 
 const loginSchema = z.object({
 	email: z
