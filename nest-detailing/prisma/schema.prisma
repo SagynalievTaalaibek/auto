@@ -69,16 +69,28 @@ enum TokenType {
 
 // ЗАКАЗ
 
-model Service {
-  id          String   @id @default(uuid())
-  name        String
-  price       Float
-  duration    Int
-  description String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+model ServiceCategory {
+  id            String          @id @default(uuid())
+  name          String
+  slug          String          @unique
+  services      Service[]
+  OrderCategory OrderCategory[]
 
-  orders Order[]
+  @@map("service_categories")
+}
+
+model Service {
+  id          String          @id @default(uuid())
+  name        String
+  slug        String          @unique
+  description String?
+  categoryId  String
+  category    ServiceCategory @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orderServices OrderService[]
 
   @@map("services")
 }
@@ -89,25 +101,51 @@ model Order {
   userId String @map("user_id")
   user   User   @relation("Orders", fields: [userId], references: [id])
 
-  carId String @map("car_id")
-  car   Car    @relation(fields: [carId], references: [id])
+  carId String? @map("car_id")
+  car   Car?    @relation(fields: [carId], references: [id])
 
-  services   Service[]
   status     OrderStatus @default(NEW)
-  startTime  DateTime    @map("start_time")
+  startTime  DateTime?   @map("start_time")
   endTime    DateTime?   @map("end_time")
   totalPrice Float?      @map("total_price")
-  notes      String? // Примечания для мастера
+  notes      String?
 
   masterId String? @map("master_id")
   master   User?   @relation("Master", fields: [masterId], references: [id])
 
-  photos String[] @default([]) // Ссылки на фото (например, Google Drive)
+  photos String[] @default([])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  orderCategories OrderCategory[] // выбранные основные категории
+  orderServices   OrderService[] // конкретные подуслуги
+
   @@map("orders")
+}
+
+model OrderCategory {
+  id         String          @id @default(uuid())
+  orderId    String
+  categoryId String
+  order      Order           @relation(fields: [orderId], references: [id])
+  category   ServiceCategory @relation(fields: [categoryId], references: [id])
+
+  @@unique([orderId, categoryId])
+  @@map("order_categories")
+}
+
+model OrderService {
+  id        String @id @default(uuid())
+  orderId   String
+  serviceId String
+  price     Float? // можно указать цену за подуслугу
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  service Service @relation(fields: [serviceId], references: [id])
+
+  @@unique([orderId, serviceId])
+  @@map("order_services")
 }
 
 // Перечисление статусов заказа

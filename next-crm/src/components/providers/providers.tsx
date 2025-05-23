@@ -7,7 +7,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 
-import { CrmLayout } from '@/components/layout/crm-layout';
+import { LayoutCrm } from '@/components/layout/layout-crm';
 
 import theme from '@/shared/config/theme';
 import { persistor, store } from '@/shared/store/store';
@@ -23,7 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 				>
 					<ThemeProvider theme={theme}>
 						<CssBaseline />
-						<CrmLayout>{children}</CrmLayout>
+						<LayoutCrm>{children}</LayoutCrm>
 					</ThemeProvider>
 				</SnackbarProvider>
 			</PersistGate>
