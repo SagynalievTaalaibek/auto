@@ -13,12 +13,11 @@ import theme from '@/shared/config/theme';
 import { getNavigationByRole } from '@/shared/constants/navigations';
 import { useAppSelector } from '@/shared/hooks/hooksStore';
 
-export function LayoutCrm({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
 	const user = useAppSelector(selectUser);
 
 	if (!user) return <LoadingScreen />;
-
-	const navigation = getNavigationByRole(user.role);
+	const navigation = getNavigationByRole('ADMIN');
 
 	return (
 		<AppProvider

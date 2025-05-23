@@ -15,20 +15,18 @@ export default function Page() {
 
 	useEffect(() => {
 		if (user) {
-			router.push('/dashboard');
+			router.replace('/dashboard');
 		}
-	}, [user, router]);
+	}, [user]);
+
+	if (user) return null;
 
 	return (
-		<div>
-			{!user && (
-				<AuthLayout
-					title="Вход в систему"
-					description="Введите ваш email и пароль для входа в систему"
-					form={<LoginForm />}
-					footerText={<>Если нету аккаунта, админ должен добавить</>}
-				/>
-			)}
-		</div>
+		<AuthLayout
+			title="Вход в систему"
+			description="Введите ваш email и пароль для входа в систему"
+			form={<LoginForm />}
+			footerText={<>Если нет аккаунта, админ должен добавить</>}
+		/>
 	);
 }
