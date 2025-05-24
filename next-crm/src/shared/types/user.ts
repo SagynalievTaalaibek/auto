@@ -1,4 +1,4 @@
-export type UserRole = 'REGULAR' | 'ADMIN';
+export type UserRole = 'REGULAR' | 'ADMIN' | 'MASTER';
 export type AuthMethod = 'CREDENTIALS' | 'GOOGLE' | 'YANDEX';
 
 export interface IUser {

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosError } from 'axios';
 
-import axiosApi from '@/shared/config/axioxApi';
+import axiosApi from '@/shared/config/axiosApi';
 import { API_ROUTES } from '@/shared/constants/constants';
 import { TypeLoginSchema } from '@/shared/schemas';
 import { ErrorResponse } from '@/shared/types/error';
@@ -22,13 +22,6 @@ export const loginUser = createAsyncThunk(
 	},
 );
 
-export const verifyToken = createAsyncThunk(
-	'auth/verifyToken',
-	async (token: string | null) => {
-		const response = await axiosApi.post(API_ROUTES.EMAIL_CONFIRMATION, token);
-		return response.data.user;
-	},
-);
 /*
 export const logout = createAsyncThunk<void, undefined, { state: RootState }>(
 	'users/logout',

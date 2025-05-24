@@ -18,7 +18,7 @@ export const ROUTES = {
 export const API_ROUTES = {
 	LOGIN: '/auth/login',
 	REGISTER: '/auth/register',
-	EMAIL_CONFIRMATION: 'auth/email-confirmation',
+	SESSION_CHECK: '/users/session',
 };
 
 export const dashboardAdminRouters = [
