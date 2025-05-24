@@ -37,7 +37,6 @@ model User {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  Car       Car[]
 
   @@map("users")
 }
@@ -69,16 +68,22 @@ enum TokenType {
 
 // ЗАКАЗ
 
-model Service {
-  id          String   @id @default(uuid())
-  name        String
-  price       Float
-  duration    Int
-  description String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+model ServiceCategory {
+  id            String          @id @default(uuid())
+  name          String
+  services      Service[]
+  OrderCategory OrderCategory[]
 
-  orders Order[]
+  @@map("service_categories")
+}
+
+model Service {
+  id         String          @id @default(uuid())
+  name       String
+  categoryId String          @map("category_id")
+  category   ServiceCategory @relation(fields: [categoryId], references: [id])
+
+  orderServices OrderService[]
 
   @@map("services")
 }
@@ -89,25 +94,52 @@ model Order {
   userId String @map("user_id")
   user   User   @relation("Orders", fields: [userId], references: [id])
 
-  carId String @map("car_id")
-  car   Car    @relation(fields: [carId], references: [id])
+  carBrand String @map("car_brand")
+  carModel String @map("car_model")
+  carYear  String @map("car_year")
+  carColor String @map("car_color")
 
-  services   Service[]
   status     OrderStatus @default(NEW)
-  startTime  DateTime    @map("start_time")
+  startTime  DateTime?   @map("start_time")
   endTime    DateTime?   @map("end_time")
   totalPrice Float?      @map("total_price")
-  notes      String? // Примечания для мастера
+  notes      String?
 
   masterId String? @map("master_id")
   master   User?   @relation("Master", fields: [masterId], references: [id])
 
-  photos String[] @default([]) // Ссылки на фото (например, Google Drive)
+  photos String[] @default([])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  orderCategories OrderCategory[] // выбранные основные категории
+  orderServices   OrderService[] // конкретные подуслуги
+
   @@map("orders")
+}
+
+model OrderCategory {
+  id         String          @id @default(uuid())
+  orderId    String          @map("order_id")
+  categoryId String          @map("category_id")
+  order      Order           @relation(fields: [orderId], references: [id])
+  category   ServiceCategory @relation(fields: [categoryId], references: [id])
+
+  @@unique([orderId, categoryId])
+  @@map("order_categories")
+}
+
+model OrderService {
+  id        String @id @default(uuid())
+  orderId   String @map("order_id")
+  serviceId String @map("service_id")
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  service Service @relation(fields: [serviceId], references: [id])
+
+  @@unique([orderId, serviceId])
+  @@map("order_services")
 }
 
 // Перечисление статусов заказа
@@ -120,26 +152,4 @@ enum OrderStatus {
   CLOSED
   CANCELLED
   RESCHEDULED
-}
-
-model Car {
-  id String @id @default(uuid())
-
-  userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
-
-  brand String // Марка (например, "Toyota")
-  model String // Модель (например, "Camry")
-  year  Int // Год выпуска
-  color String // Цвет
-  vin   String? @unique // VIN-номер (опционально)
-  plate String? @unique // Госномер (опционально)
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Связи
-  orders Order[] // Заказы, связанные с этим авто
-
-  @@map("cars")
 }

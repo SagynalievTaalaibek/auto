@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { loginUser, verifyToken } from '@/features/auth/authThunks';
+import { loginUser } from '@/features/auth/authThunks';
 
 import { RootState } from '@/shared/store/store';
 import { IUser } from '@/shared/types/user';
@@ -43,18 +43,6 @@ const authSlice = createSlice({
 			.addCase(loginUser.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
-			});
-
-		builder
-			.addCase(verifyToken.pending, state => {
-				state.loading = true;
-			})
-			.addCase(verifyToken.fulfilled, (state, action) => {
-				state.loading = false;
-				state.user = action.payload;
-			})
-			.addCase(verifyToken.rejected, state => {
-				state.loading = false;
 			});
 	},
 });

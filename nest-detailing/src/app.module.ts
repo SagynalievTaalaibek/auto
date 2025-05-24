@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { IS_DEV_ENV } from './libs/common/utils/is-dev.util';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
 	imports: [
@@ -23,7 +24,8 @@ import { UserModule } from './user/user.module';
 		MailModule,
 		EmailConfirmationModule,
 		PasswordRecoveryModule,
-		TwoFactorAuthModule
+		TwoFactorAuthModule,
+		OrderModule
 	]
 })
 export class AppModule {}
