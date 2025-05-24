@@ -48,7 +48,6 @@ export class UserController {
 	@Get('session')
 	async getSession(@Authorized('id') userId: string) {
 		const user = await this.userService.findById(userId);
-		console.log('user', user);
 		return { userId: user.id, role: user.role };
 	}
 }

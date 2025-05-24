@@ -37,7 +37,6 @@ model User {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  Car       Car[]
 
   @@map("users")
 }
@@ -72,7 +71,6 @@ enum TokenType {
 model ServiceCategory {
   id            String          @id @default(uuid())
   name          String
-  slug          String          @unique
   services      Service[]
   OrderCategory OrderCategory[]
 
@@ -80,15 +78,10 @@ model ServiceCategory {
 }
 
 model Service {
-  id          String          @id @default(uuid())
-  name        String
-  slug        String          @unique
-  description String?
-  categoryId  String
-  category    ServiceCategory @relation(fields: [categoryId], references: [id])
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id         String          @id @default(uuid())
+  name       String
+  categoryId String          @map("category_id")
+  category   ServiceCategory @relation(fields: [categoryId], references: [id])
 
   orderServices OrderService[]
 
@@ -101,8 +94,10 @@ model Order {
   userId String @map("user_id")
   user   User   @relation("Orders", fields: [userId], references: [id])
 
-  carId String? @map("car_id")
-  car   Car?    @relation(fields: [carId], references: [id])
+  carBrand String @map("car_brand")
+  carModel String @map("car_model")
+  carYear  String @map("car_year")
+  carColor String @map("car_color")
 
   status     OrderStatus @default(NEW)
   startTime  DateTime?   @map("start_time")
@@ -126,8 +121,8 @@ model Order {
 
 model OrderCategory {
   id         String          @id @default(uuid())
-  orderId    String
-  categoryId String
+  orderId    String          @map("order_id")
+  categoryId String          @map("category_id")
   order      Order           @relation(fields: [orderId], references: [id])
   category   ServiceCategory @relation(fields: [categoryId], references: [id])
 
@@ -137,9 +132,8 @@ model OrderCategory {
 
 model OrderService {
   id        String @id @default(uuid())
-  orderId   String
-  serviceId String
-  price     Float? // можно указать цену за подуслугу
+  orderId   String @map("order_id")
+  serviceId String @map("service_id")
 
   order   Order   @relation(fields: [orderId], references: [id])
   service Service @relation(fields: [serviceId], references: [id])
@@ -158,26 +152,4 @@ enum OrderStatus {
   CLOSED
   CANCELLED
   RESCHEDULED
-}
-
-model Car {
-  id String @id @default(uuid())
-
-  userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
-
-  brand String // Марка (например, "Toyota")
-  model String // Модель (например, "Camry")
-  year  Int // Год выпуска
-  color String // Цвет
-  vin   String? @unique // VIN-номер (опционально)
-  plate String? @unique // Госномер (опционально)
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Связи
-  orders Order[] // Заказы, связанные с этим авто
-
-  @@map("cars")
 }
