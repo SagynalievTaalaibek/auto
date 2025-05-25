@@ -4,7 +4,8 @@ import clsx from 'clsx';
 import type { Metadata } from 'next';
 import { Geist_Mono, Montserrat } from 'next/font/google';
 
-import './globals.css';
+import '../shared/theme/globals.css';
+
 import { Providers } from '@/components';
 
 const montserrat = Montserrat({

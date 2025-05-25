@@ -1,21 +1,15 @@
 import { SliceComponentProps } from '@prismicio/react';
 import { FC } from 'react';
 
-import { Typography } from '@mui/material';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import { Box, Button, Typography } from '@mui/material';
 import { Content } from '@prismicio/client';
+import { PrismicNextImage } from '@prismicio/next';
 
-/**
- * Props for `AllServices`.
- */
 export type AllServicesProps = SliceComponentProps<Content.AllServicesSlice>;
 
-/**
- * Component for "AllServices" Slices.
- */
-
 const AllServices: FC<AllServicesProps> = ({ slice }) => {
+	const isDark = slice?.primary?.color === 'black';
+
 	return (
 		<section
 			data-slice-type={slice.slice_type}
@@ -23,73 +17,96 @@ const AllServices: FC<AllServicesProps> = ({ slice }) => {
 		>
 			<Box
 				sx={{
-					bgcolor: '#111',
-					color: '#fff',
-					px: 4,
-					py: 6,
+					backgroundColor: isDark ? '#111' : '#fff',
+					color: isDark ? '#fff' : '#111',
+					px: { xs: 2, md: 6 },
+					py: { xs: 4, md: 8 },
 				}}
 			>
-				<Box className={'container'}>
-					<Box sx={{ flex: '1 1 50%', pr: 4 }}>
-						<Typography variant="h3" sx={{ color: '#FF7C5D', mb: 3 }}>
+				<Box
+					className="container"
+					sx={{
+						maxWidth: '1200px',
+						mx: 'auto',
+						display: 'flex',
+						flexDirection: { xs: 'column', md: 'row' },
+						alignItems: 'center',
+						justifyContent: 'space-between',
+						gap: 6,
+					}}
+				>
+					{/* Левая часть - текст */}
+					<Box sx={{ flex: '1 1 60%' }}>
+						<Typography
+							variant="h3"
+							sx={{
+								color: '#FF7C5D',
+								fontWeight: 700,
+								fontSize: { xs: '2rem', md: '2.5rem' },
+								mb: 2,
+							}}
+						>
 							{slice.primary.title}
 						</Typography>
-						<Typography variant="body1" sx={{ mb: 4 }}>
+
+						<Typography
+							variant="body1"
+							sx={{
+								fontSize: '1rem',
+								lineHeight: 1.6,
+								color: isDark ? '#ccc' : '#444',
+								mb: 4,
+							}}
+						>
 							{slice.primary.description}
 						</Typography>
 
-						{/* Кнопки */}
 						<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
 							{slice.primary.button_group.map((text, index) => (
 								<Button
 									key={index}
-									variant={
-										text.button_name === 'ПОДАРОЧНЫЙ СЕРТИФИКАТ'
-											? 'contained'
-											: 'outlined'
-									}
+									variant="contained"
 									sx={{
-										bgcolor:
-											text.button_name === 'ПОДАРОЧНЫЙ СЕРТИФИКАТ'
-												? '#FF7C5D'
-												: '#222',
+										backgroundColor: '#FF7C5D',
 										color: '#fff',
-										borderColor: '#333',
-										borderRadius: '8px',
+										borderRadius: 2,
+										px: 3,
+										py: 1.2,
 										fontSize: '0.875rem',
-										px: 2.5,
-										py: 1,
+										fontWeight: 600,
 										textTransform: 'uppercase',
 										'&:hover': {
-											bgcolor:
-												text.button_name === 'ПОДАРОЧНЫЙ СЕРТИФИКАТ'
-													? '#e0664b'
-													: '#333',
+											backgroundColor: '#e86449',
 										},
 									}}
 								>
 									{text.button_name}
 								</Button>
 							))}
-
-							{/* Отдельно кнопка "Подарочный сертификат" */}
-							<Button
-								variant="contained"
-								sx={{
-									bgcolor: '#FF7C5D',
-									color: '#fff',
-									borderRadius: '8px',
-									px: 2.5,
-									py: 1,
-									textTransform: 'none',
-									'&:hover': {
-										bgcolor: '#e0664b',
-									},
-								}}
-							>
-								ПОДАРОЧНЫЙ СЕРТИФИКАТ
-							</Button>
 						</Box>
+					</Box>
+
+					{/* Правая часть — изображение (если нужно) */}
+					<Box
+						sx={{
+							display: { xs: 'none', md: 'block' },
+							width: '100%',
+							maxWidth: '400px',
+							borderRadius: 3,
+							boxShadow: 4,
+							flex: '1 1 40%',
+							overflow: 'hidden',
+						}}
+					>
+						<PrismicNextImage
+							field={slice.primary.image_service}
+							fallbackAlt=""
+							style={{
+								width: '100%',
+								height: 'auto',
+								display: 'block',
+							}}
+						/>
 					</Box>
 				</Box>
 			</Box>

@@ -1,6 +1,10 @@
+'use client';
+
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import LogoutIcon from '@mui/icons-material/Logout';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -14,24 +18,46 @@ export function getNavigationByRole(role: UserRole): Navigation {
 		{ segment: 'dashboard', title: 'Рабочий стол', icon: <DashboardIcon /> },
 		{ segment: 'dashboard/inventory', title: 'Склад', icon: <InventoryIcon /> },
 		{
+			segment: 'dashboard/services',
+			title: 'Услуги',
+			icon: <AddToPhotosIcon />,
+		},
+		{
 			segment: 'dashboard/orders',
 			title: 'Заказы',
 			icon: <ShoppingCartIcon />,
 		},
-		{ segment: 'analytics', title: 'Аналитика', icon: <BarChartIcon /> },
-		{ segment: 'settings', title: 'Настройка', icon: <SettingsIcon /> },
+		{
+			segment: 'dashboard/analytics',
+			title: 'Аналитика',
+			icon: <BarChartIcon />,
+		},
+		{
+			segment: 'dashboard/settings',
+			title: 'Настройка',
+			icon: <SettingsIcon />,
+		},
 	];
 
 	const adminNavigation: Navigation = [
 		{ kind: 'divider' },
 		{ kind: 'header', title: 'Администрирование' },
-		{ segment: 'staff', title: 'Персонал', icon: <PersonAddIcon /> },
-		{ segment: 'reports', title: 'Отчет', icon: <BarChartIcon /> },
+		{ segment: 'dashboard/staff', title: 'Персонал', icon: <PersonAddIcon /> },
+		{ segment: 'dashboard/reports', title: 'Отчет', icon: <BarChartIcon /> },
+	];
+
+	const logoutNavigation: Navigation = [
+		{ kind: 'divider' },
+		{
+			segment: 'logout',
+			title: 'Выход',
+			icon: <LogoutIcon />,
+		},
 	];
 
 	if (role === 'ADMIN') {
-		return [...baseNavigation, ...adminNavigation];
+		return [...baseNavigation, ...adminNavigation, ...logoutNavigation];
 	}
 
-	return baseNavigation;
+	return [...baseNavigation, ...logoutNavigation];
 }

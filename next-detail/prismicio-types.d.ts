@@ -3,6 +3,62 @@ import type * as prismic from '@prismicio/client';
 
 type Simplify<T> = { [KeyType in keyof T]: T[KeyType] };
 
+type ContactPageDocumentDataSlicesSlice = ContactInfoSlice;
+
+/**
+ * Content for Contact Page documents
+ */
+interface ContactPageDocumentData {
+	/**
+	 * title main field in *Contact Page*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_page.title_main
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	title_main: prismic.KeyTextField;
+
+	/**
+	 * sub title field in *Contact Page*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_page.sub_title
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	sub_title: prismic.KeyTextField;
+
+	/**
+	 * Slice Zone field in *Contact Page*
+	 *
+	 * - **Field Type**: Slice Zone
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_page.slices[]
+	 * - **Tab**: Main
+	 * - **Documentation**: https://prismic.io/docs/field#slices
+	 */
+	slices: prismic.SliceZone<ContactPageDocumentDataSlicesSlice>;
+}
+
+/**
+ * Contact Page document from Prismic
+ *
+ * - **API ID**: `contact_page`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/custom-types
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type ContactPageDocument<Lang extends string = string> =
+	prismic.PrismicDocumentWithUID<
+		Simplify<ContactPageDocumentData>,
+		'contact_page',
+		Lang
+	>;
+
 type PageDocumentDataSlicesSlice = StartScreenSlice;
 
 /**
@@ -140,7 +196,10 @@ export type ServicesDocument<Lang extends string = string> =
 		Lang
 	>;
 
-export type AllDocumentTypes = PageDocument | ServicesDocument;
+export type AllDocumentTypes =
+	| ContactPageDocument
+	| PageDocument
+	| ServicesDocument;
 
 /**
  * Item in *ServiceItem → Default → Primary → Button Group*
@@ -202,6 +261,17 @@ export interface AllServicesSliceDefaultPrimary {
 	image_service: prismic.ImageField<never>;
 
 	/**
+	 * color field in *ServiceItem → Default → Primary*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **Default Value**: black
+	 * - **API ID Path**: all_services.default.primary.color
+	 * - **Documentation**: https://prismic.io/docs/field#select
+	 */
+	color: prismic.SelectField<'black' | 'white', 'filled'>;
+
+	/**
 	 * Button Group field in *ServiceItem → Default → Primary*
 	 *
 	 * - **Field Type**: Group
@@ -242,6 +312,130 @@ type AllServicesSliceVariation = AllServicesSliceDefault;
 export type AllServicesSlice = prismic.SharedSlice<
 	'all_services',
 	AllServicesSliceVariation
+>;
+
+/**
+ * Item in *ContactInfo → Default → Primary → items*
+ */
+export interface ContactInfoSliceDefaultPrimaryItemsItem {
+	/**
+	 * platform field in *ContactInfo → Default → Primary → items*
+	 *
+	 * - **Field Type**: Select
+	 * - **Placeholder**: *None*
+	 * - **Default Value**: telegram
+	 * - **API ID Path**: contact_info.default.primary.items[].platform
+	 * - **Documentation**: https://prismic.io/docs/field#select
+	 */
+	platform: prismic.SelectField<
+		'telegram' | 'whatsapp' | 'instagram',
+		'filled'
+	>;
+
+	/**
+	 * url field in *ContactInfo → Default → Primary → items*
+	 *
+	 * - **Field Type**: Link
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_info.default.primary.items[].url
+	 * - **Documentation**: https://prismic.io/docs/field#link-content-relationship
+	 */
+	url: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+}
+
+/**
+ * Primary content in *ContactInfo → Default → Primary*
+ */
+export interface ContactInfoSliceDefaultPrimary {
+	/**
+	 * address field in *ContactInfo → Default → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_info.default.primary.address
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	address: prismic.KeyTextField;
+
+	/**
+	 * phone field in *ContactInfo → Default → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_info.default.primary.phone
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	phone: prismic.KeyTextField;
+
+	/**
+	 * email field in *ContactInfo → Default → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_info.default.primary.email
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	email: prismic.KeyTextField;
+
+	/**
+	 * working hours field in *ContactInfo → Default → Primary*
+	 *
+	 * - **Field Type**: Rich Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_info.default.primary.working_hours
+	 * - **Documentation**: https://prismic.io/docs/field#rich-text-title
+	 */
+	working_hours: prismic.RichTextField;
+
+	/**
+	 * items field in *ContactInfo → Default → Primary*
+	 *
+	 * - **Field Type**: Group
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_info.default.primary.items[]
+	 * - **Documentation**: https://prismic.io/docs/field#group
+	 */
+	items: prismic.GroupField<Simplify<ContactInfoSliceDefaultPrimaryItemsItem>>;
+
+	/**
+	 * map embed url field in *ContactInfo → Default → Primary*
+	 *
+	 * - **Field Type**: Text
+	 * - **Placeholder**: *None*
+	 * - **API ID Path**: contact_info.default.primary.map_embed_url
+	 * - **Documentation**: https://prismic.io/docs/field#key-text
+	 */
+	map_embed_url: prismic.KeyTextField;
+}
+
+/**
+ * Default variation for ContactInfo Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type ContactInfoSliceDefault = prismic.SharedSliceVariation<
+	'default',
+	Simplify<ContactInfoSliceDefaultPrimary>,
+	never
+>;
+
+/**
+ * Slice variation for *ContactInfo*
+ */
+type ContactInfoSliceVariation = ContactInfoSliceDefault;
+
+/**
+ * ContactInfo Shared Slice
+ *
+ * - **API ID**: `contact_info`
+ * - **Description**: ContactInfo
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type ContactInfoSlice = prismic.SharedSlice<
+	'contact_info',
+	ContactInfoSliceVariation
 >;
 
 /**
@@ -340,6 +534,9 @@ declare module '@prismicio/client' {
 
 	namespace Content {
 		export type {
+			ContactPageDocument,
+			ContactPageDocumentData,
+			ContactPageDocumentDataSlicesSlice,
 			PageDocument,
 			PageDocumentData,
 			PageDocumentDataSlicesSlice,
@@ -352,6 +549,11 @@ declare module '@prismicio/client' {
 			AllServicesSliceDefaultPrimary,
 			AllServicesSliceVariation,
 			AllServicesSliceDefault,
+			ContactInfoSlice,
+			ContactInfoSliceDefaultPrimaryItemsItem,
+			ContactInfoSliceDefaultPrimary,
+			ContactInfoSliceVariation,
+			ContactInfoSliceDefault,
 			StartScreenSlice,
 			StartScreenSliceDefaultPrimary,
 			StartScreenSliceVariation,

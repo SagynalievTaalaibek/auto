@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { AuthLayout, RegisterForm } from '@/components';
-import { ROUTES } from '@/config/constants';
+import { ROUTES } from '@/shared/constants/constants';
 
 export default function Page() {
 	return (

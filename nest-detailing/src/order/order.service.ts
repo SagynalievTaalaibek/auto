@@ -1,15 +1,30 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { CreateMainServiceDto } from '@/order/dto/create-main-service.dto';
+import { CreateOrderClientDto } from '@/order/dto/create-order-client.dto';
+import { CreateOrderCRMDto } from '@/order/dto/create-order-crm.dto';
 import { CreateServicesDto } from '@/order/dto/create-services.dto';
-import { CreateUpdateOrderDto } from '@/order/dto/create-update-order.dto';
 import { PrismaService } from '@/prisma/prisma.service';
+
+import { OrderStatus } from '../../generated/prisma';
+
+interface OrderFilter {
+	status?: OrderStatus;
+	masterId?: string;
+	userId?: string;
+	profile?: boolean;
+	crm?: boolean;
+	createdAt?: {
+		$gte?: Date;
+		$lte?: Date;
+	};
+}
 
 @Injectable()
 export class OrderService {
 	constructor(private readonly prismaService: PrismaService) {}
 
-	async createOrder(dto: CreateUpdateOrderDto) {
+	async createOrderCRM(dto: CreateOrderCRMDto) {
 		const {
 			userId,
 			carBrand,
@@ -18,13 +33,67 @@ export class OrderService {
 			carColor,
 			categoryIds,
 			serviceIds,
-			notes,
 			masterId,
+			startTime,
+			endTime,
+			totalPrice,
 			photos,
-			totalPrice
+			notes
 		} = dto;
 
-		return this.prismaService.order.create({
+		await this.prismaService.order.create({
+			data: {
+				userId,
+				carBrand,
+				carModel,
+				carYear,
+				carColor,
+				masterId,
+				startTime: startTime ? new Date(startTime) : undefined,
+				endTime: endTime ? new Date(endTime) : undefined,
+				totalPrice,
+				photos: photos ?? [],
+				notes,
+				orderCategories: {
+					create: categoryIds.map(categoryId => ({
+						category: { connect: { id: categoryId } }
+					}))
+				},
+				orderServices: {
+					create: serviceIds.map(serviceId => ({
+						service: { connect: { id: serviceId } }
+					}))
+				}
+			},
+			include: {
+				orderCategories: {
+					include: { category: true }
+				},
+				orderServices: {
+					include: { service: true }
+				},
+				user: true,
+				master: true
+			}
+		});
+
+		return {
+			message: 'Заказ успешно создан в CRM'
+		};
+	}
+
+	async createOrder(dto: CreateOrderClientDto, userId: string) {
+		const {
+			carBrand,
+			carModel,
+			carYear,
+			carColor,
+			categoryIds,
+			serviceIds,
+			notes
+		} = dto;
+
+		await this.prismaService.order.create({
 			data: {
 				userId,
 				carBrand,
@@ -32,9 +101,6 @@ export class OrderService {
 				carYear,
 				carColor,
 				notes,
-				masterId,
-				photos,
-				totalPrice,
 				orderCategories: {
 					create: categoryIds.map(categoryId => ({
 						category: { connect: { id: categoryId } }
@@ -55,11 +121,68 @@ export class OrderService {
 				}
 			}
 		});
+
+		return {
+			message: 'Вы успешно создали заказ'
+		};
 	}
 
-	async findAll() {
+	async findAll(filters: OrderFilter, userId: string) {
+		if (filters.profile) {
+			return this.prismaService.order.findMany({
+				where: {
+					userId: userId
+				},
+				select: {
+					id: true,
+					carBrand: true,
+					orderCategories: {
+						select: {
+							category: {
+								select: {
+									name: true
+								}
+							}
+						}
+					},
+					createdAt: true,
+					status: true
+				},
+				orderBy: { createdAt: 'desc' }
+			});
+		}
+
+		if (filters.crm) {
+			return this.prismaService.order.findMany({
+				select: {
+					id: true,
+					carBrand: true,
+					carModel: true,
+					carYear: true,
+					carColor: true,
+					createdAt: true,
+					status: true,
+					user: {
+						select: {
+							name: true,
+							email: true,
+							phone: true
+						}
+					}
+				},
+				orderBy: { createdAt: 'desc' }
+			});
+		}
+
 		return this.prismaService.order.findMany({
 			include: {
+				user: {
+					select: {
+						name: true,
+						email: true,
+						phone: true
+					}
+				},
 				orderCategories: {
 					include: { category: true }
 				},
@@ -71,15 +194,38 @@ export class OrderService {
 	}
 
 	async findOne(id: string) {
-		return this.prismaService.order.findUnique({ where: { id } });
+		return this.prismaService.order.findUnique({
+			where: { id },
+			include: {
+				user: {
+					select: {
+						id: true,
+						name: true,
+						email: true,
+						phone: true
+					}
+				},
+				master: {
+					select: {
+						id: true,
+						name: true
+					}
+				},
+				orderCategories: {
+					include: { category: true }
+				},
+				orderServices: {
+					include: { service: true }
+				}
+			}
+		});
 	}
 
-	async updateOrder(id: string, dto: CreateUpdateOrderDto) {
+	/*async updateOrder(id: string, dto: CreateOrderClientDto, userId: string) {
 		const order = await this.prismaService.order.findUnique({ where: { id } });
 		if (!order) throw new NotFoundException('Order not found');
 
 		const {
-			userId,
 			carBrand,
 			carModel,
 			carYear,
@@ -128,7 +274,7 @@ export class OrderService {
 				orderServices: { include: { service: true } }
 			}
 		});
-	}
+	}*/
 
 	/// SERVICES ///
 

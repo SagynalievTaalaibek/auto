@@ -9,8 +9,8 @@ import { SnackbarProvider } from 'notistack';
 
 import Layout from '@/components/providers/layout';
 
-import theme from '@/shared/config/theme';
 import { persistor, store } from '@/shared/store/store';
+import theme from '@/shared/theme/theme';
 
 export function Providers({ children }: { children: React.ReactNode }) {
 	return (

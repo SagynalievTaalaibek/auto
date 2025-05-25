@@ -4,30 +4,20 @@ import React, { useState } from 'react';
 
 import { Box, Button, CircularProgress, TextField } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { z } from 'zod';
 
 import { loginUser } from '@/features/auth/authThunks';
 
 import { ROUTES } from '@/shared/constants/constants';
 import { useAppDispatch } from '@/shared/hooks/hooksStore';
 import { useAppSnackbar } from '@/shared/hooks/useAppSnackbar';
-import { LoginPayload } from '@/shared/types/user';
-
-const loginSchema = z.object({
-	email: z
-		.string({ required_error: 'Email обязателен' })
-		.email('Неверный email'),
-	password: z
-		.string({ required_error: 'Пароль обязателен' })
-		.min(6, 'Пароль должен быть не менее 6 символов'),
-});
+import { LoginSchema, TypeLoginSchema } from '@/shared/schemas';
 
 export function LoginForm() {
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 	const { showSnackbar } = useAppSnackbar();
 
-	const [values, setValues] = useState<LoginPayload>({
+	const [values, setValues] = useState<TypeLoginSchema>({
 		email: '',
 		password: '',
 	});
@@ -43,7 +33,7 @@ export function LoginForm() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		const result = loginSchema.safeParse(values);
+		const result = LoginSchema.safeParse(values);
 
 		if (!result.success) {
 			const fieldErrors: Record<string, string> = {};

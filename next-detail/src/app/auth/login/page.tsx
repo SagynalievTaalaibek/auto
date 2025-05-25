@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 import { AuthLayout, LoginForm } from '@/components';
-import { ROUTES } from '@/config/constants';
+import { ROUTES } from '@/shared/constants/constants';
 
 export const metadata: Metadata = {
 	title: 'Войти в аккаунт',

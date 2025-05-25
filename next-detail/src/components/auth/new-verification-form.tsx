@@ -5,9 +5,8 @@ import { useEffect } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useSearchParams } from 'next/navigation';
 
-import { useVerificationMutation } from '@/hooks/useVerificationMutation';
-
 import { AuthLayout } from '@/components';
+import { useVerificationMutation } from '@/shared/hooks/useVerificationMutation';
 
 export function NewVerificationForm() {
 	const searchParams = useSearchParams();

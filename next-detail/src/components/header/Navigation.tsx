@@ -13,9 +13,11 @@ import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { useAppSelector } from '@/hooks/hooksStore';
+import { selectUser } from '@/features/auth/authSlice';
+import { logoutUser } from '@/features/auth/authThunks';
 
-import { NAVBAR_URL, ROUTES } from '@/config/constants';
+import { NAVBAR_URL, ROUTES } from '@/shared/constants/constants';
+import { useAppDispatch, useAppSelector } from '@/shared/hooks/hooksStore';
 
 const settings = [
 	{
@@ -49,7 +51,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 export function Navigation() {
-	const user = useAppSelector(state => state.user.user);
+	const user = useAppSelector(selectUser);
+	const dispatch = useAppDispatch();
 	const router = useRouter();
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
 		null,
@@ -73,8 +76,9 @@ export function Navigation() {
 		setAnchorElUser(null);
 	};
 
-	const onLogout = () => {
-		console.log('logout');
+	const onLogout = async () => {
+		await dispatch(logoutUser());
+		router.push(ROUTES.HOME);
 	};
 
 	return (

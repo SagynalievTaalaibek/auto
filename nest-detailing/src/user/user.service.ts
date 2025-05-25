@@ -2,11 +2,32 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { hash } from 'argon2';
 
 import { PrismaService } from '@/prisma/prisma.service';
+import { AssignRoleDto } from '@/user/dto/assign-role.dto';
 import { UpdateUserDto } from '@/user/dto/update-user.dto';
 
 @Injectable()
 export class UserService {
 	public constructor(private readonly prismaService: PrismaService) {}
+
+	public async findMasters() {
+		return this.prismaService.user.findMany({
+			where: { role: 'MASTER' },
+			select: {
+				id: true,
+				name: true,
+				specialization: true
+			}
+		});
+	}
+
+	public async findUsers() {
+		return this.prismaService.user.findMany({
+			select: {
+				id: true,
+				email: true
+			}
+		});
+	}
 
 	public async findById(id: string) {
 		const user = await this.prismaService.user.findUnique({
@@ -65,6 +86,40 @@ export class UserService {
 				email: dto.email,
 				name: dto.name,
 				isTwoFactorEnabled: dto.isTwoFactorEnabled
+			}
+		});
+	}
+
+	public async findAll() {
+		return this.prismaService.user.findMany({
+			select: {
+				id: true,
+				name: true,
+				email: true,
+				phone: true,
+				role: true,
+				specialization: true
+			}
+		});
+	}
+
+	public async assignRole(dto: AssignRoleDto) {
+		const user = await this.findByEmail(dto.email);
+		if (!user) {
+			throw new NotFoundException('Пользователь с таким email не найден');
+		}
+
+		return this.prismaService.user.update({
+			where: { id: user.id },
+			data: {
+				role: dto.role,
+				specialization: dto.role === 'MASTER' ? dto.specialization : null
+			},
+			select: {
+				id: true,
+				email: true,
+				role: true,
+				specialization: true
 			}
 		});
 	}

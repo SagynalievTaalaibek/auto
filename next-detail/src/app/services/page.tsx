@@ -12,7 +12,7 @@ export default async function Page() {
 		.catch(() => notFound());
 
 	return (
-		<div style={{ marginTop: '68px' }}>
+		<div>
 			<SliceZone slices={page.data.slices} components={components} />
 		</div>
 	);
