@@ -1,0 +1,89 @@
+{
+  "id": "contact_info",
+  "type": "SharedSlice",
+  "name": "ContactInfo",
+  "description": "ContactInfo",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "address": {
+          "type": "Text",
+          "config": {
+            "label": "address",
+            "placeholder": ""
+          }
+        },
+        "phone": {
+          "type": "Text",
+          "config": {
+            "label": "phone",
+            "placeholder": ""
+          }
+        },
+        "email": {
+          "type": "Text",
+          "config": {
+            "label": "email",
+            "placeholder": ""
+          }
+        },
+        "working_hours": {
+          "type": "StructuredText",
+          "config": {
+            "label": "working hours",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,o-list-item,rtl,list-item,embed"
+          }
+        },
+        "items": {
+          "type": "Group",
+          "config": {
+            "label": "items",
+            "repeat": true,
+            "fields": {
+              "platform": {
+                "type": "Select",
+                "config": {
+                  "label": "platform",
+                  "placeholder": "",
+                  "options": [
+                    "telegram",
+                    "whatsapp",
+                    "instagram"
+                  ],
+                  "default_value": "telegram"
+                }
+              },
+              "url": {
+                "type": "Link",
+                "config": {
+                  "label": "url",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              }
+            }
+          }
+        },
+        "map_embed_url": {
+          "type": "Text",
+          "config": {
+            "label": "map embed url",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

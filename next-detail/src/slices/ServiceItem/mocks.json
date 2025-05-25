@@ -61,6 +61,11 @@
 				"credits": null,
 				"__TYPE__": "ImageContent",
 				"thumbnails": {}
+			},
+			"color": {
+				"__TYPE__": "FieldContent",
+				"value": "black",
+				"type": "Select"
 			}
 		},
 		"items": []

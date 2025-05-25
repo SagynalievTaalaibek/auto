@@ -1,0 +1,70 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"address": {
+				"__TYPE__": "FieldContent",
+				"value": "solid",
+				"type": "Text"
+			},
+			"phone": {
+				"__TYPE__": "FieldContent",
+				"value": "return",
+				"type": "Text"
+			},
+			"email": {
+				"__TYPE__": "FieldContent",
+				"value": "herd",
+				"type": "Text"
+			},
+			"working_hours": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Quis proident aute nostrud sunt adipisicing aliquip amet sit nisi cillum culpa quis."
+						}
+					}
+				]
+			},
+			"items": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"platform",
+								{
+									"__TYPE__": "FieldContent",
+									"value": "telegram",
+									"type": "Select"
+								}
+							],
+							[
+								"url",
+								{
+									"key": "23dcc122-8a07-4104-b1d0-acfb1cebd6a4",
+									"__TYPE__": "LinkContent",
+									"value": {
+										"__TYPE__": "ExternalLink",
+										"url": "https://slicemachine.dev",
+										"text": "shadow"
+									}
+								}
+							]
+						]
+					}
+				]
+			},
+			"map_embed_url": {
+				"__TYPE__": "FieldContent",
+				"value": "felt",
+				"type": "Text"
+			}
+		},
+		"items": []
+	}
+]
