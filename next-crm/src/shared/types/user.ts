@@ -1,39 +1,45 @@
 export type UserRole = 'REGULAR' | 'ADMIN' | 'MASTER';
-export type AuthMethod = 'CREDENTIALS' | 'GOOGLE' | 'YANDEX';
 
 export interface IUser {
 	id: string;
 	email: string;
 	password: string;
-
 	name: string;
-	picture?: string | null;
-
+	phone: string;
 	role: UserRole;
 
 	isVerified: boolean;
 	isTwoFactorEnabled: boolean;
 
-	method: AuthMethod;
+	specialization?: string;
+	avatarUrl?: string;
 
-	createdAt: string;
+	createdAt: string; // ISO string
 	updatedAt: string;
 }
 
-export interface LoginPayload {
+export interface IUsersDataCRM {
+	id: string;
 	email: string;
-	password: string;
-	code?: string;
-}
-
-export interface RegisterPayload {
 	name: string;
-	email: string;
-	password: string;
-	passwordRepeat: string;
+	phone: string;
+	role: UserRole;
+	specialization: string;
 }
 
-export interface UserAuth {
-	userId: string;
-	role: UserRole;
+export interface IAssignRole {
+	email: string;
+	role: string;
+	specialization?: string;
+}
+
+export type TokenType = 'VERIFICATION' | 'TWO_FACTOR' | 'PASSWORD_RESET';
+
+export interface Token {
+	id: string;
+	email: string;
+	token: string;
+	type: TokenType;
+	expiresIn: string;
+	createdAt: string;
 }

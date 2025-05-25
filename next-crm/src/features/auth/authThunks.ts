@@ -1,10 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { AxiosError } from 'axios';
 
+import { logout } from '@/features/auth/authSlice';
+
 import axiosApi from '@/shared/config/axiosApi';
 import { API_ROUTES } from '@/shared/constants/constants';
 import { TypeLoginSchema } from '@/shared/schemas';
 import { ErrorResponse } from '@/shared/types/error';
+import { IAssignRole, IUsersDataCRM } from '@/shared/types/user';
 
 export const loginUser = createAsyncThunk(
 	'auth/loginUser',
@@ -22,18 +25,36 @@ export const loginUser = createAsyncThunk(
 	},
 );
 
-/*
-export const logout = createAsyncThunk<void, undefined, { state: RootState }>(
-	'users/logout',
-	async (_, { getState, dispatch }) => {
-		const token = getState().auth.user?.token || getState().auth.employer?.token;
-		const response = await axiosApi.delete('/user/sessions', { headers: { Authorization: 'Bearer ' + token } });
-		if (getState().auth.user?.token) {
-			dispatch(openSuccessMessage(response.data.message));
-			dispatch(unsetUser());
-		} else {
-			dispatch(openSuccessMessage(response.data.message));
-			dispatch(unsetEmployer());
+export const logoutUser = createAsyncThunk<void, undefined>(
+	'auth/logoutUser',
+	async (_, { dispatch }) => {
+		await axiosApi.post(API_ROUTES.LOGOUT);
+		dispatch(logout());
+	},
+);
+
+export const fetchUsersCRM = createAsyncThunk(
+	'auth/fetchUsersCRM',
+	async () => {
+		const response = await axiosApi.get<IUsersDataCRM[]>(
+			API_ROUTES.USERS_GET_CRM,
+		);
+		return response.data;
+	},
+);
+
+export const assignRole = createAsyncThunk(
+	'auth/assignRole',
+	async (data: IAssignRole, { rejectWithValue }) => {
+		try {
+			const response = await axiosApi.post(API_ROUTES.ASSIGN_ROLE, data);
+			return response.data;
+		} catch (error: unknown) {
+			const axiosError = error as AxiosError<ErrorResponse>;
+
+			return rejectWithValue(
+				axiosError.response?.data?.message || 'Change role failed',
+			);
 		}
 	},
-);*/
+);

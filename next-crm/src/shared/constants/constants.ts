@@ -19,6 +19,15 @@ export const API_ROUTES = {
 	LOGIN: '/auth/login',
 	REGISTER: '/auth/register',
 	SESSION_CHECK: '/users/session',
+
+	LOGOUT: '/auth/logout',
+	EMAIL_CONFIRMATION: 'auth/email-confirmation',
+
+	CREATE_ORDER: '/orders',
+	MAIN_SERVICES: '/orders/main-services',
+	ORDER_GET_PROFILE: '/orders?profile=true',
+	USERS_GET_CRM: '/users',
+	ASSIGN_ROLE: '/users/admin/assign-role',
 };
 
 export const dashboardAdminRouters = [
