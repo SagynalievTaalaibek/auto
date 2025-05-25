@@ -38,7 +38,7 @@ export const createOrder = createAsyncThunk(
 			const axiosError = error as AxiosError<ErrorResponse>;
 
 			return rejectWithValue(
-				axiosError.response?.data?.message || 'Register failed',
+				axiosError.response?.data?.message || 'CREATE ORDER FAILED',
 			);
 		}
 	},

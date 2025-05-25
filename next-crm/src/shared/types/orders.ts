@@ -25,51 +25,71 @@ export type OrderStatus =
 	| 'CANCELLED'
 	| 'RESCHEDULED';
 
-export interface Order {
+export interface IOrder {
 	id: string;
 	userId: string;
-
 	carBrand: string;
 	carModel: string;
 	carYear: string;
 	carColor: string;
-
 	status: OrderStatus;
-	startTime?: string;
-	endTime?: string;
-	totalPrice?: number;
-	notes?: string;
-	masterId?: string;
-
+	startTime: string; // ISO формат
+	endTime: string | null;
+	totalPrice: number | null;
+	notes: string;
+	masterId: string;
 	photos: string[];
-
 	createdAt: string;
 	updatedAt: string;
+	user: {
+		id: string;
+		name: string;
+		email: string;
+		phone: string;
+	};
+	master: {
+		id: string;
+		name: string;
+	};
+	orderCategories: OrderCategory[];
+	orderServices: OrderService[];
 }
 
 export interface OrderCategory {
 	id: string;
 	orderId: string;
 	categoryId: string;
+	category: {
+		id: string;
+		name: string;
+	};
 }
 
 export interface OrderService {
 	id: string;
 	orderId: string;
 	serviceId: string;
+	service: {
+		id: string;
+		name: string;
+		categoryId: string;
+	};
 }
 
-export interface OrderGetProfile {
+export interface OrderGetCRM {
 	id: string;
 
 	carBrand: string;
+	carModel: string;
+	carYear: string;
+	carColor: string;
 	status: OrderStatus;
 
-	orderCategories: {
-		category: {
-			name: string;
-		};
-	}[];
+	user: {
+		name: string;
+		email: string;
+		phone: string;
+	};
 
 	createdAt: string;
 }

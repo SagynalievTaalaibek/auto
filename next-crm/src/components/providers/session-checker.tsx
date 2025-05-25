@@ -32,8 +32,8 @@ export function SessionChecker() {
 			}
 		};
 
-		checkSession();
-	}, [user]);
+		void checkSession();
+	}, [user, dispatch]);
 
 	return null;
 }

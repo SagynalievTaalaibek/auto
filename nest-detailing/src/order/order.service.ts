@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { CreateMainServiceDto } from '@/order/dto/create-main-service.dto';
+import { CreateOrderClientDto } from '@/order/dto/create-order-client.dto';
+import { CreateOrderCRMDto } from '@/order/dto/create-order-crm.dto';
 import { CreateServicesDto } from '@/order/dto/create-services.dto';
-import { CreateUpdateOrderDto } from '@/order/dto/create-update-order.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 
 import { OrderStatus } from '../../generated/prisma';
@@ -12,6 +13,7 @@ interface OrderFilter {
 	masterId?: string;
 	userId?: string;
 	profile?: boolean;
+	crm?: boolean;
 	createdAt?: {
 		$gte?: Date;
 		$lte?: Date;
@@ -22,7 +24,65 @@ interface OrderFilter {
 export class OrderService {
 	constructor(private readonly prismaService: PrismaService) {}
 
-	async createOrder(dto: CreateUpdateOrderDto, userId: string) {
+	async createOrderCRM(dto: CreateOrderCRMDto) {
+		const {
+			userId,
+			carBrand,
+			carModel,
+			carYear,
+			carColor,
+			categoryIds,
+			serviceIds,
+			masterId,
+			startTime,
+			endTime,
+			totalPrice,
+			photos,
+			notes
+		} = dto;
+
+		await this.prismaService.order.create({
+			data: {
+				userId,
+				carBrand,
+				carModel,
+				carYear,
+				carColor,
+				masterId,
+				startTime: startTime ? new Date(startTime) : undefined,
+				endTime: endTime ? new Date(endTime) : undefined,
+				totalPrice,
+				photos: photos ?? [],
+				notes,
+				orderCategories: {
+					create: categoryIds.map(categoryId => ({
+						category: { connect: { id: categoryId } }
+					}))
+				},
+				orderServices: {
+					create: serviceIds.map(serviceId => ({
+						service: { connect: { id: serviceId } }
+					}))
+				}
+			},
+			include: {
+				orderCategories: {
+					include: { category: true }
+				},
+				orderServices: {
+					include: { service: true }
+				},
+				user: true,
+				master: true
+			}
+		});
+
+		return {
+			message: 'Заказ успешно создан в CRM'
+		};
+	}
+
+	async createOrder(dto: CreateOrderClientDto, userId: string) {
 		const {
 			carBrand,
 			carModel,
@@ -30,10 +90,7 @@ export class OrderService {
 			carColor,
 			categoryIds,
 			serviceIds,
-			notes,
-			masterId,
-			photos,
-			totalPrice
+			notes
 		} = dto;
 
 		await this.prismaService.order.create({
@@ -44,9 +101,6 @@ export class OrderService {
 				carYear,
 				carColor,
 				notes,
-				masterId,
-				photos,
-				totalPrice,
 				orderCategories: {
 					create: categoryIds.map(categoryId => ({
 						category: { connect: { id: categoryId } }
@@ -98,11 +152,32 @@ export class OrderService {
 			});
 		}
 
+		if (filters.crm) {
+			return this.prismaService.order.findMany({
+				select: {
+					id: true,
+					carBrand: true,
+					carModel: true,
+					carYear: true,
+					carColor: true,
+					createdAt: true,
+					status: true,
+					user: {
+						select: {
+							name: true,
+							email: true,
+							phone: true
+						}
+					}
+				},
+				orderBy: { createdAt: 'desc' }
+			});
+		}
+
 		return this.prismaService.order.findMany({
 			include: {
 				user: {
 					select: {
-						id: true,
 						name: true,
 						email: true,
 						phone: true
@@ -119,10 +194,34 @@ export class OrderService {
 	}
 
 	async findOne(id: string) {
-		return this.prismaService.order.findUnique({ where: { id } });
+		return this.prismaService.order.findUnique({
+			where: { id },
+			include: {
+				user: {
+					select: {
+						id: true,
+						name: true,
+						email: true,
+						phone: true
+					}
+				},
+				master: {
+					select: {
+						id: true,
+						name: true
+					}
+				},
+				orderCategories: {
+					include: { category: true }
+				},
+				orderServices: {
+					include: { service: true }
+				}
+			}
+		});
 	}
 
-	async updateOrder(id: string, dto: CreateUpdateOrderDto, userId: string) {
+	/*async updateOrder(id: string, dto: CreateOrderClientDto, userId: string) {
 		const order = await this.prismaService.order.findUnique({ where: { id } });
 		if (!order) throw new NotFoundException('Order not found');
 
@@ -175,7 +274,7 @@ export class OrderService {
 				orderServices: { include: { service: true } }
 			}
 		});
-	}
+	}*/
 
 	/// SERVICES ///
 

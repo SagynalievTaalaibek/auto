@@ -22,7 +22,7 @@ export const API_ROUTES = {
 	LOGOUT: '/auth/logout',
 	EMAIL_CONFIRMATION: 'auth/email-confirmation',
 
-	CREATE_ORDER: '/orders',
+	CREATE_ORDER: '/orders/client',
 	MAIN_SERVICES: '/orders/main-services',
 	ORDER_GET_PROFILE: '/orders?profile=true',
 };

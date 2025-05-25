@@ -9,6 +9,26 @@ import { UpdateUserDto } from '@/user/dto/update-user.dto';
 export class UserService {
 	public constructor(private readonly prismaService: PrismaService) {}
 
+	public async findMasters() {
+		return this.prismaService.user.findMany({
+			where: { role: 'MASTER' },
+			select: {
+				id: true,
+				name: true,
+				specialization: true
+			}
+		});
+	}
+
+	public async findUsers() {
+		return this.prismaService.user.findMany({
+			select: {
+				id: true,
+				email: true
+			}
+		});
+	}
+
 	public async findById(id: string) {
 		const user = await this.prismaService.user.findUnique({
 			where: {

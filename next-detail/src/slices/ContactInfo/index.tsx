@@ -77,7 +77,7 @@ const ContactInfo: FC<ContactInfoProps> = ({ slice }) => {
 							ml={1}
 							component={Link}
 							href={`tel:${slice.primary.phone}`}
-							sx={{ color: '#FFD700', textDecoration: 'none' }}
+							sx={{ color: '#fff', textDecoration: 'none' }}
 						>
 							{slice.primary.phone}
 						</Typography>
@@ -89,7 +89,7 @@ const ContactInfo: FC<ContactInfoProps> = ({ slice }) => {
 							ml={1}
 							component={Link}
 							href={`mailto:${slice.primary.email}`}
-							sx={{ color: '#FFD700', textDecoration: 'none' }}
+							sx={{ color: '#fff', textDecoration: 'none' }}
 						>
 							{slice.primary.email}
 						</Typography>

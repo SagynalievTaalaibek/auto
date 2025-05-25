@@ -13,6 +13,7 @@ import storage from 'redux-persist/lib/storage';
 
 import { authReducer } from '@/features/auth/authSlice';
 import { drawerReducer } from '@/features/drawer/drawer-slice';
+import { orderReducer } from '@/features/order/order.slice';
 
 const usersPersistConfig = {
 	key: 'auto-crm:users',
@@ -23,6 +24,7 @@ const usersPersistConfig = {
 const rootReducer = combineReducers({
 	auth: persistReducer(usersPersistConfig, authReducer),
 	drawer: drawerReducer,
+	orders: orderReducer,
 });
 
 export const store = configureStore({

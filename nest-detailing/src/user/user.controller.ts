@@ -54,6 +54,20 @@ export class UserController {
 
 	@Authorization(UserRole.ADMIN)
 	@HttpCode(HttpStatus.OK)
+	@Get('master')
+	public async findMasters() {
+		return this.userService.findMasters();
+	}
+
+	@Authorization(UserRole.ADMIN)
+	@HttpCode(HttpStatus.OK)
+	@Get('users')
+	public async findUsers() {
+		return this.userService.findUsers();
+	}
+
+	@Authorization(UserRole.ADMIN)
+	@HttpCode(HttpStatus.OK)
 	@Get('by-id/:id')
 	public async findById(@Param('id') id: string) {
 		return this.userService.findById(id);

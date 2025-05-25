@@ -13,9 +13,8 @@ import {
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { selectUserLoading, selectUsersCRM } from '@/features/auth/authSlice';
+import { selectUsersCRM } from '@/features/auth/authSlice';
 
-import { LoadingScreen } from '@/components';
 import { useAppSelector } from '@/shared/hooks/hooksStore';
 
 const columns = [
@@ -37,7 +36,7 @@ export function UserTable() {
 	const filteredUsers = React.useMemo(() => {
 		if (!selectedRole) return users;
 		return users.filter(user => user.role === selectedRole);
-	}, [selectedRole]);
+	}, [selectedRole, users]);
 
 	return (
 		<Box sx={{ width: '100%' }}>

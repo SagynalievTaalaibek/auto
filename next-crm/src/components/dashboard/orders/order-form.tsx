@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
+	Autocomplete,
 	Box,
 	Button,
 	Checkbox,
+	Divider,
 	FormControl,
+	FormHelperText,
 	InputLabel,
 	ListItemText,
 	MenuItem,
@@ -15,31 +18,55 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material';
-import { useRouter } from 'next/navigation';
 
+import { selectUsersCRM } from '@/features/auth/authSlice';
+import { fetchUsersCRM } from '@/features/auth/authThunks';
 import { selectMainServices } from '@/features/order/order.slice';
-import { createOrder, fetchMainServices } from '@/features/order/order.thunks';
+import { fetchMainServices } from '@/features/order/order.thunks';
 
 import NumberInputStyled from '@/components/ui/number-input-styled';
+import OrderBreadcrumbs from '@/components/ui/order-breadcrumbs';
 
 import carData from '../../../shared/constants/car.json';
 
-import { ROUTES } from '@/shared/constants/constants';
 import { useAppDispatch, useAppSelector } from '@/shared/hooks/hooksStore';
-import { useAppSnackbar } from '@/shared/hooks/useAppSnackbar';
-import { OrderSchema, TypeOrderSchema } from '@/shared/schemas';
+import { OrderCRMSchema, TypeOrderCRMSchema } from '@/shared/schemas';
 
-export default function Page() {
+const masters = [
+	{
+		id: 'efc8452e-a8e6-4012-b3d0-d5432c4e834d',
+		name: 'Arthur',
+		specialization: 'Оклейка салона',
+	},
+	{
+		id: '4592b6b1-e136-4208-80d8-a1ef9f6c45aa',
+		name: 'Merlin',
+		specialization: 'Химчистка',
+	},
+	{
+		id: '5bca7890-e70b-4113-b3eb-515bb16073db',
+		name: 'Percival',
+		specialization: 'Полировка',
+	},
+];
+
+export function OrderForm() {
 	const dispatch = useAppDispatch();
 	const mainServices = useAppSelector(selectMainServices);
-	const router = useRouter();
-	const { showSnackbar } = useAppSnackbar();
+	const users = useAppSelector(selectUsersCRM);
+	/*	const router = useRouter();
+	const { showSnackbar } = useAppSnackbar();*/
 
 	useEffect(() => {
-		dispatch(fetchMainServices());
+		const loadData = async () => {
+			await dispatch(fetchMainServices());
+			await dispatch(fetchUsersCRM());
+		};
+
+		void loadData();
 	}, [dispatch]);
 
-	const [formData, setFormData] = useState<TypeOrderSchema>({
+	const [formData, setFormData] = useState<TypeOrderCRMSchema>({
 		carBrand: '',
 		carModel: '',
 		carYear: 0,
@@ -47,25 +74,31 @@ export default function Page() {
 		categoryIds: [],
 		serviceIds: [],
 		notes: '',
+		masterId: '',
+		startTime: '',
+		endTime: '',
+		totalPrice: 0,
+		photos: [],
+		userId: '',
 	});
 
 	const [errors, setErrors] = useState<
-		Partial<Record<keyof TypeOrderSchema, string>>
+		Partial<Record<keyof TypeOrderCRMSchema, string>>
 	>({});
 
 	const handleChange = (
-		key: keyof TypeOrderSchema,
+		key: keyof TypeOrderCRMSchema,
 		value: string | string[],
 	) => {
 		setFormData(prev => ({ ...prev, [key]: value }));
 	};
 
 	const handleSubmit = async () => {
-		const result = OrderSchema.safeParse(formData);
+		const result = OrderCRMSchema.safeParse(formData);
 		if (!result.success) {
-			const fieldErrors: Partial<Record<keyof TypeOrderSchema, string>> = {};
+			const fieldErrors: Partial<Record<keyof TypeOrderCRMSchema, string>> = {};
 			result.error.errors.forEach(err => {
-				const field = err.path[0] as keyof TypeOrderSchema;
+				const field = err.path[0] as keyof TypeOrderCRMSchema;
 				fieldErrors[field] = err.message;
 			});
 			setErrors(fieldErrors);
@@ -73,12 +106,14 @@ export default function Page() {
 			return;
 		}
 
-		const response = await dispatch(createOrder(formData));
+		/*const response = await dispatch(createOrder(formData));
 
 		if (response.payload) {
 			showSnackbar(response.payload.message, 'success');
 			router.push(ROUTES.PROFILE);
-		}
+		}*/
+
+		console.log('Success', result.data);
 	};
 
 	// Для выбора модели по выбранной марке
@@ -92,11 +127,38 @@ export default function Page() {
 	return (
 		<Box className="container">
 			<Box sx={{ mx: 'auto', mt: 4 }}>
+				<OrderBreadcrumbs
+					items={[
+						{ label: 'Панель управления', href: '/dashboard' },
+						{ label: 'Заказы', href: '/dashboard/orders' },
+						{ label: 'Создание заказа' },
+					]}
+				/>
+
+				<Divider sx={{ my: 2 }} />
 				<Typography variant="h5" mb={2}>
 					Создание заказа
 				</Typography>
 
-				{/* Поля формы с MUI */}
+				<Autocomplete
+					fullWidth
+					options={users}
+					getOptionLabel={option => option.email}
+					value={users.find(user => user.id === formData.userId) || null}
+					onChange={(event, newValue) => {
+						handleChange('userId', newValue ? newValue.id : '');
+					}}
+					renderInput={params => (
+						<TextField
+							{...params}
+							label="Клиент"
+							margin="normal"
+							error={!!errors.userId}
+							helperText={errors.userId}
+						/>
+					)}
+				/>
+
 				<TextField
 					fullWidth
 					label="Марка"
@@ -216,6 +278,73 @@ export default function Page() {
 						))}
 					</Select>
 				</FormControl>
+
+				<FormControl fullWidth margin="normal" error={!!errors.masterId}>
+					<InputLabel>Ответственный мастер</InputLabel>
+					<Select
+						value={formData.masterId}
+						label="Ответственный мастер"
+						onChange={e => handleChange('masterId', e.target.value)}
+					>
+						{masters.map(master => (
+							<MenuItem key={master.id} value={master.id}>
+								{master.name} — {master.specialization}
+							</MenuItem>
+						))}
+					</Select>
+					<FormHelperText>{errors.masterId}</FormHelperText>
+				</FormControl>
+
+				<TextField
+					fullWidth
+					label="Дата и время начала"
+					margin="normal"
+					type="datetime-local"
+					value={formData.startTime.slice(0, 16)}
+					onChange={e => handleChange('startTime', e.target.value)}
+					error={!!errors.startTime}
+					helperText={errors.startTime}
+				/>
+
+				<TextField
+					fullWidth
+					label="Дата и время окончания"
+					margin="normal"
+					type="datetime-local"
+					value={formData.endTime.slice(0, 16)}
+					onChange={e => handleChange('endTime', e.target.value)}
+					error={!!errors.endTime}
+					helperText={errors.endTime}
+				/>
+
+				<NumberInputStyled
+					label="Стоимость заказа"
+					value={formData.totalPrice}
+					onChange={e => handleChange('totalPrice', e.target.value)}
+					error={!!errors.totalPrice}
+					helperText={errors.totalPrice}
+					min={2000}
+				/>
+
+				<Box mt={2}>
+					<Typography variant="body1" mb={1}>
+						Ссылки на фото автомобиля (можно вставить несколько через запятую)
+					</Typography>
+					<TextField
+						fullWidth
+						multiline
+						rows={3}
+						placeholder="https://drive.google.com/..., https://imgur.com/..."
+						value={formData.photos?.join(', ') || ''}
+						onChange={e => {
+							const links = e.target.value
+								.split(',')
+								.map(link => link.trim())
+								.filter(link => link !== '');
+							handleChange('photos', links);
+						}}
+					/>
+				</Box>
 
 				<TextField
 					fullWidth

@@ -32,15 +32,6 @@ export const OrderSchema = z.object({
 		.min(1, 'Выберите хотя бы одну услугу'),
 
 	notes: z.string().optional(),
-
-	masterId: z.string().uuid().optional(),
-
-	photos: z.array(z.string()).optional(),
-
-	totalPrice: z
-		.number({ invalid_type_error: 'Цена должна быть числом' })
-		.nonnegative('Цена не может быть отрицательной')
-		.optional(),
 });
 
 export type TypeOrderSchema = z.infer<typeof OrderSchema>;

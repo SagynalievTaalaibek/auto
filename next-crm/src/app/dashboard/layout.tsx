@@ -9,9 +9,9 @@ import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { selectUser } from '@/features/auth/authSlice';
 
 import { LoadingScreen } from '@/components';
-import theme from '@/shared/config/theme';
 import { getNavigationByRole } from '@/shared/constants/navigations';
 import { useAppSelector } from '@/shared/hooks/hooksStore';
+import theme from '@/shared/theme/theme';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	const user = useAppSelector(selectUser);

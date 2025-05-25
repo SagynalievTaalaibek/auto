@@ -5,7 +5,6 @@ import {
 	HttpCode,
 	HttpStatus,
 	Param,
-	Patch,
 	Post,
 	Query
 } from '@nestjs/common';
@@ -13,8 +12,9 @@ import {
 import { Authorization } from '@/auth/decorators/auth.decorator';
 import { Authorized } from '@/auth/decorators/authorized.decorator';
 import { CreateMainServiceDto } from '@/order/dto/create-main-service.dto';
+import { CreateOrderClientDto } from '@/order/dto/create-order-client.dto';
+import { CreateOrderCRMDto } from '@/order/dto/create-order-crm.dto';
 import { CreateServicesDto } from '@/order/dto/create-services.dto';
-import { CreateUpdateOrderDto } from '@/order/dto/create-update-order.dto';
 
 import { UserRole } from '../../generated/prisma';
 
@@ -26,13 +26,31 @@ export class OrderController {
 
 	@Authorization()
 	@HttpCode(HttpStatus.OK)
-	@Post()
+	@Post('crm')
+	async createOrderCRM(@Body() dto: CreateOrderCRMDto) {
+		return this.orderService.createOrderCRM(dto);
+	}
+
+	@Authorization()
+	@HttpCode(HttpStatus.OK)
+	@Post('client')
 	async createOrder(
 		@Authorized('id') userId: string,
-		@Body() dto: CreateUpdateOrderDto
+		@Body() dto: CreateOrderClientDto
 	) {
 		return this.orderService.createOrder(dto, userId);
 	}
+
+	/*@Authorization()
+	@HttpCode(HttpStatus.OK)
+	@Patch(':id')
+	public async updateOrder(
+		@Authorized('id') userId: string,
+		@Param('id') id: string,
+		@Body() dto: CreateOrderClientDto
+	) {
+		return this.orderService.updateOrder(id, dto, userId);
+	}*/
 
 	@Authorization()
 	@HttpCode(HttpStatus.OK)
@@ -41,16 +59,16 @@ export class OrderController {
 		@Authorized('id') userId: string,
 		@Query()
 		query: {
-			status?: string;
-			masterId?: string;
-			fromDate?: string;
-			toDate?: string;
-			userId?: string;
 			profile: boolean;
+			crm: boolean;
 		}
 	) {
 		if (query.profile) {
 			return this.orderService.findAll({ profile: query.profile }, userId);
+		}
+
+		if (query.crm) {
+			return this.orderService.findAll({ crm: query.crm }, userId);
 		}
 
 		return this.orderService.findAll({}, userId);
@@ -86,16 +104,5 @@ export class OrderController {
 	@Get(':id')
 	public async findOne(@Param('id') id: string) {
 		return this.orderService.findOne(id);
-	}
-
-	@Authorization()
-	@HttpCode(HttpStatus.OK)
-	@Patch(':id')
-	public async updateOrder(
-		@Authorized('id') userId: string,
-		@Param('id') id: string,
-		@Body() dto: CreateUpdateOrderDto
-	) {
-		return this.orderService.updateOrder(id, dto, userId);
 	}
 }
