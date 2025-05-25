@@ -1,7 +1,6 @@
-import { IUser } from '@/types/user';
-
-import axiosApi from '@/config/axioxApi';
-import { API_ROUTES } from '@/config/constants';
+import axiosApi from '@/shared/config/axioxApi';
+import { API_ROUTES } from '@/shared/constants/constants';
+import { IUser } from '@/shared/types/user';
 
 class VerificationService {
 	public async newVerification(token: string | null) {

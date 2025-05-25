@@ -4,11 +4,11 @@ import { useRouter } from 'next/navigation';
 
 import { saveUser } from '@/features/auth/authSlice';
 
-import { useAppDispatch } from '@/hooks/hooksStore';
-import { useAppSnackbar } from '@/hooks/useAppSnackbar';
+import { verificationService } from '../services';
 
-import { ROUTES } from '@/config/constants';
-import { verificationService } from '@/services';
+import { ROUTES } from '@/shared/constants/constants';
+import { useAppDispatch } from '@/shared/hooks/hooksStore';
+import { useAppSnackbar } from '@/shared/hooks/useAppSnackbar';
 
 export function useVerificationMutation() {
 	const { showSnackbar } = useAppSnackbar();

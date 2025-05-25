@@ -5,13 +5,25 @@ import { CreateServicesDto } from '@/order/dto/create-services.dto';
 import { CreateUpdateOrderDto } from '@/order/dto/create-update-order.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 
+import { OrderStatus } from '../../generated/prisma';
+
+interface OrderFilter {
+	status?: OrderStatus;
+	masterId?: string;
+	userId?: string;
+	profile?: boolean;
+	createdAt?: {
+		$gte?: Date;
+		$lte?: Date;
+	};
+}
+
 @Injectable()
 export class OrderService {
 	constructor(private readonly prismaService: PrismaService) {}
 
-	async createOrder(dto: CreateUpdateOrderDto) {
+	async createOrder(dto: CreateUpdateOrderDto, userId: string) {
 		const {
-			userId,
 			carBrand,
 			carModel,
 			carYear,
@@ -24,7 +36,7 @@ export class OrderService {
 			totalPrice
 		} = dto;
 
-		return this.prismaService.order.create({
+		await this.prismaService.order.create({
 			data: {
 				userId,
 				carBrand,
@@ -55,11 +67,47 @@ export class OrderService {
 				}
 			}
 		});
+
+		return {
+			message: 'Вы успешно создали заказ'
+		};
 	}
 
-	async findAll() {
+	async findAll(filters: OrderFilter, userId: string) {
+		if (filters.profile) {
+			return this.prismaService.order.findMany({
+				where: {
+					userId: userId
+				},
+				select: {
+					id: true,
+					carBrand: true,
+					orderCategories: {
+						select: {
+							category: {
+								select: {
+									name: true
+								}
+							}
+						}
+					},
+					createdAt: true,
+					status: true
+				},
+				orderBy: { createdAt: 'desc' }
+			});
+		}
+
 		return this.prismaService.order.findMany({
 			include: {
+				user: {
+					select: {
+						id: true,
+						name: true,
+						email: true,
+						phone: true
+					}
+				},
 				orderCategories: {
 					include: { category: true }
 				},
@@ -74,12 +122,11 @@ export class OrderService {
 		return this.prismaService.order.findUnique({ where: { id } });
 	}
 
-	async updateOrder(id: string, dto: CreateUpdateOrderDto) {
+	async updateOrder(id: string, dto: CreateUpdateOrderDto, userId: string) {
 		const order = await this.prismaService.order.findUnique({ where: { id } });
 		if (!order) throw new NotFoundException('Order not found');
 
 		const {
-			userId,
 			carBrand,
 			carModel,
 			carYear,

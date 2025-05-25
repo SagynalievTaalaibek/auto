@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-import { ROUTES } from '@/config/constants';
+import { ROUTES } from '@/shared/constants/constants';
 
 export async function middleware(req: NextRequest) {
 	const { pathname } = req.nextUrl;
@@ -21,5 +21,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-	matcher: ['/profile'],
+	matcher: ['/profile/:path*'],
 };

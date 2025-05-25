@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { loginUser, registerUser } from '@/features/auth/authThunks';
 
-import { IUser } from '@/types/user';
+import { RootState } from '@/shared/store/store';
+import { IUser } from '@/shared/types/user';
 
 interface AuthState {
 	user: IUser | null;
@@ -62,4 +63,5 @@ const authSlice = createSlice({
 
 export const authReducer = authSlice.reducer;
 export const { logout, saveUser } = authSlice.actions;
-export default authSlice.reducer;
+
+export const selectUser = (state: RootState) => state.auth.user;

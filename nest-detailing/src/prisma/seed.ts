@@ -62,9 +62,9 @@ const categories = [
 ];
 
 async function main() {
-	await prismaService.order.deleteMany();
 	await prismaService.orderService.deleteMany();
 	await prismaService.orderCategory.deleteMany();
+	await prismaService.order.deleteMany();
 	await prismaService.service.deleteMany();
 	await prismaService.serviceCategory.deleteMany();
 

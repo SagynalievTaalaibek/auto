@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: 'Auto Detailing CRM',
-	description: 'CRM for auto detailing business',
+	title: 'Auto Detailing',
+	description: 'Auto detailing business',
 };
 
 export default function RootLayout({

@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { authReducer } from '@/features/auth/authSlice';
+import { orderReducer } from '@/features/order/order.slice';
 
 const usersPersistConfig = {
 	key: 'auto:users',
@@ -20,7 +21,8 @@ const usersPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-	user: persistReducer(usersPersistConfig, authReducer),
+	auth: persistReducer(usersPersistConfig, authReducer),
+	orders: orderReducer,
 });
 
 export const store = configureStore({

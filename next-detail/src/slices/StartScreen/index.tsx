@@ -63,9 +63,9 @@ const StartScreen: FC<StartScreenProps> = ({ slice }) => {
 							variant="body1"
 							sx={{
 								fontSize: { xs: '1rem', md: '1.125rem' },
-								color: '#ccc',
+								color: 'white',
 								maxWidth: '500px',
-								fontWeight: 500,
+								fontWeight: 600,
 							}}
 						>
 							{slice.primary.description}

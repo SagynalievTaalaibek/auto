@@ -7,9 +7,6 @@ import {
 } from 'class-validator';
 
 export class CreateUpdateOrderDto {
-	@IsUUID()
-	userId: string;
-
 	@IsString()
 	carBrand: string;
 
