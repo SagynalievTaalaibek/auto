@@ -1,25 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import {
-	fetchMainServices,
 	fetchOneOrder,
+	fetchOneOrderUpdate,
 	fetchOrdersCRM,
 } from '@/features/order/order.thunks';
 
+import { TypeOrderCRMSchema } from '@/shared/schemas';
 import { RootState } from '@/shared/store/store';
-import { IMainServiceData, IOrder, OrderGetCRM } from '@/shared/types/orders';
+import { IOrder, OrderGetCRM } from '@/shared/types/orders';
 
 interface OrderState {
 	oneOrder: IOrder | null;
+	oneOrderUpdate: TypeOrderCRMSchema | null;
 	ordersCRM: OrderGetCRM[];
-	mainServices: IMainServiceData[];
 	loading: boolean;
 }
 
 const initialState: OrderState = {
 	oneOrder: null,
+	oneOrderUpdate: null,
 	ordersCRM: [],
-	mainServices: [],
 	loading: false,
 };
 
@@ -28,18 +29,6 @@ export const orderSlice = createSlice({
 	initialState,
 	reducers: {},
 	extraReducers: builder => {
-		builder
-			.addCase(fetchMainServices.pending, state => {
-				state.loading = true;
-			})
-			.addCase(fetchMainServices.fulfilled, (state, action) => {
-				state.loading = false;
-				state.mainServices = action.payload;
-			})
-			.addCase(fetchMainServices.rejected, state => {
-				state.loading = false;
-			});
-
 		builder
 			.addCase(fetchOrdersCRM.pending, state => {
 				state.loading = true;
@@ -63,14 +52,24 @@ export const orderSlice = createSlice({
 			.addCase(fetchOneOrder.rejected, state => {
 				state.loading = false;
 			});
+
+		builder
+			.addCase(fetchOneOrderUpdate.pending, state => {
+				state.loading = true;
+			})
+			.addCase(fetchOneOrderUpdate.fulfilled, (state, action) => {
+				state.loading = false;
+				state.oneOrderUpdate = action.payload;
+			})
+			.addCase(fetchOneOrderUpdate.rejected, state => {
+				state.loading = false;
+			});
 	},
 });
 
 export const orderReducer = orderSlice.reducer;
 export const selectOrdersCRM = (state: RootState) => state.orders.ordersCRM;
 export const selectOneOrder = (state: RootState) => state.orders.oneOrder;
+export const selectOneOrderUpdate = (state: RootState) =>
+	state.orders.oneOrderUpdate;
 export const selectOrderLoading = (state: RootState) => state.orders.loading;
-
-/// SERVICES
-export const selectMainServices = (state: RootState) =>
-	state.orders.mainServices;

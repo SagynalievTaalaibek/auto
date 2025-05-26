@@ -7,7 +7,11 @@ import axiosApi from '@/shared/config/axiosApi';
 import { API_ROUTES } from '@/shared/constants/constants';
 import { TypeLoginSchema } from '@/shared/schemas';
 import { ErrorResponse } from '@/shared/types/error';
-import { IAssignRole, IUsersDataCRM } from '@/shared/types/user';
+import {
+	IAssignRole,
+	IMasterDataCRM,
+	IUsersDataCRM,
+} from '@/shared/types/user';
 
 export const loginUser = createAsyncThunk(
 	'auth/loginUser',
@@ -38,6 +42,16 @@ export const fetchUsersCRM = createAsyncThunk(
 	async () => {
 		const response = await axiosApi.get<IUsersDataCRM[]>(
 			API_ROUTES.USERS_GET_CRM,
+		);
+		return response.data;
+	},
+);
+
+export const fetchMastersCRM = createAsyncThunk(
+	'auth/fetchMastersCRM',
+	async () => {
+		const response = await axiosApi.get<IMasterDataCRM[]>(
+			API_ROUTES.USERS_GET_MASTERS,
 		);
 		return response.data;
 	},

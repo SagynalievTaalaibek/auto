@@ -11,12 +11,8 @@ import {
 
 import { Authorization } from '@/auth/decorators/auth.decorator';
 import { Authorized } from '@/auth/decorators/authorized.decorator';
-import { CreateMainServiceDto } from '@/order/dto/create-main-service.dto';
 import { CreateOrderClientDto } from '@/order/dto/create-order-client.dto';
 import { CreateOrderCRMDto } from '@/order/dto/create-order-crm.dto';
-import { CreateServicesDto } from '@/order/dto/create-services.dto';
-
-import { UserRole } from '../../generated/prisma';
 
 import { OrderService } from './order.service';
 
@@ -74,35 +70,22 @@ export class OrderController {
 		return this.orderService.findAll({}, userId);
 	}
 
-	// SERVICES //
-
-	@Authorization(UserRole.ADMIN)
-	@HttpCode(HttpStatus.OK)
-	@Post('main-service')
-	async createMainService(@Body() dto: CreateMainServiceDto) {
-		return this.orderService.createMainService(dto);
-	}
-
-	@Authorization(UserRole.ADMIN)
-	@HttpCode(HttpStatus.OK)
-	@Post('services')
-	async createServices(@Body() dto: CreateServicesDto) {
-		return this.orderService.createServices(dto);
-	}
-
-	@Authorization()
-	@HttpCode(HttpStatus.OK)
-	@Get('main-services')
-	async getMainService() {
-		return this.orderService.getMainService();
-	}
-
 	/// BY-ID
 
 	@Authorization()
 	@HttpCode(HttpStatus.OK)
 	@Get(':id')
-	public async findOne(@Param('id') id: string) {
-		return this.orderService.findOne(id);
+	public async findOne(
+		@Param('id') id: string,
+		@Query()
+		query: {
+			update: boolean;
+		}
+	) {
+		if (query.update) {
+			return this.orderService.findOne({ update: query.update }, id);
+		}
+
+		return this.orderService.findOne({}, id);
 	}
 }

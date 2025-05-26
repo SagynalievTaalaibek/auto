@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { CreateMainServiceDto } from '@/order/dto/create-main-service.dto';
 import { CreateOrderClientDto } from '@/order/dto/create-order-client.dto';
 import { CreateOrderCRMDto } from '@/order/dto/create-order-crm.dto';
-import { CreateServicesDto } from '@/order/dto/create-services.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 
 import { OrderStatus } from '../../generated/prisma';
@@ -193,7 +191,42 @@ export class OrderService {
 		});
 	}
 
-	async findOne(id: string) {
+	async findOne(filters: { update?: boolean }, id: string) {
+		if (filters.update) {
+			const order = await this.prismaService.order.findUnique({
+				where: { id },
+				include: {
+					orderCategories: {
+						include: { category: true }
+					},
+					orderServices: {
+						include: { service: true }
+					}
+				}
+			});
+
+			if (!order)
+				throw new NotFoundException(
+					'Заказа не найден. Пожалуйста, проверьте введенные данные'
+				);
+
+			return {
+				userId: order.userId,
+				carBrand: order.carBrand,
+				carModel: order.carModel,
+				carYear: order.carYear,
+				carColor: order.carColor,
+				categoryIds: order.orderCategories.map(oc => oc.category.id),
+				serviceIds: order.orderServices.map(os => os.service.id),
+				masterId: order.masterId ?? undefined,
+				startTime: order.startTime?.toISOString() ?? '',
+				endTime: order.endTime?.toISOString() ?? '',
+				totalPrice: order.totalPrice ?? 0,
+				notes: order.notes ?? '',
+				photos: order.photos ?? []
+			};
+		}
+
 		return this.prismaService.order.findUnique({
 			where: { id },
 			include: {
@@ -275,40 +308,4 @@ export class OrderService {
 			}
 		});
 	}*/
-
-	/// SERVICES ///
-
-	async createMainService(dto: CreateMainServiceDto) {
-		const { name } = dto;
-
-		return this.prismaService.serviceCategory.create({
-			data: {
-				name
-			}
-		});
-	}
-
-	async createServices(dto: CreateServicesDto) {
-		const { name, categoryId } = dto;
-
-		return this.prismaService.service.create({
-			data: {
-				name,
-				categoryId
-			},
-			include: {
-				orderServices: {
-					include: { service: true }
-				}
-			}
-		});
-	}
-
-	async getMainService() {
-		return this.prismaService.serviceCategory.findMany({
-			include: {
-				services: true
-			}
-		});
-	}
 }

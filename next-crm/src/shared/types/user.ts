@@ -27,6 +27,12 @@ export interface IUsersDataCRM {
 	specialization: string;
 }
 
+export interface IMasterDataCRM {
+	id: string;
+	name: string;
+	specialization: string;
+}
+
 export interface IAssignRole {
 	email: string;
 	role: string;

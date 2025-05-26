@@ -27,23 +27,23 @@ export function getNavigationByRole(role: UserRole): Navigation {
 			title: 'Заказы',
 			icon: <ShoppingCartIcon />,
 		},
-		{
-			segment: 'dashboard/analytics',
-			title: 'Аналитика',
-			icon: <BarChartIcon />,
-		},
-		{
-			segment: 'dashboard/settings',
-			title: 'Настройка',
-			icon: <SettingsIcon />,
-		},
 	];
 
 	const adminNavigation: Navigation = [
 		{ kind: 'divider' },
 		{ kind: 'header', title: 'Администрирование' },
 		{ segment: 'dashboard/staff', title: 'Персонал', icon: <PersonAddIcon /> },
+		{
+			segment: 'dashboard/analytics',
+			title: 'Аналитика',
+			icon: <BarChartIcon />,
+		},
 		{ segment: 'dashboard/reports', title: 'Отчет', icon: <BarChartIcon /> },
+		{
+			segment: 'dashboard/settings',
+			title: 'Настройка',
+			icon: <SettingsIcon />,
+		},
 	];
 
 	const logoutNavigation: Navigation = [

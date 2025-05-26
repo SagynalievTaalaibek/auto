@@ -10,7 +10,7 @@ import { OrderGetProfile } from '@/shared/types/orders';
 export const fetchMainServices = createAsyncThunk(
 	'orders/fetchMainServices',
 	async () => {
-		const response = await axiosApi.get(API_ROUTES.MAIN_SERVICES);
+		const response = await axiosApi.get(API_ROUTES.MAIN_SERVICES_GET);
 		return response.data;
 	},
 );

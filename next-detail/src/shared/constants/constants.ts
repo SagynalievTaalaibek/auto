@@ -23,6 +23,7 @@ export const API_ROUTES = {
 	EMAIL_CONFIRMATION: 'auth/email-confirmation',
 
 	CREATE_ORDER: '/orders/client',
-	MAIN_SERVICES: '/orders/main-services',
 	ORDER_GET_PROFILE: '/orders?profile=true',
+
+	MAIN_SERVICES_GET: '/services/main-services',
 };

@@ -16,7 +16,7 @@ interface OrderBreadcrumbsProps {
 	items: BreadcrumbItem[];
 }
 
-const OrderBreadcrumbs: React.FC<OrderBreadcrumbsProps> = ({ items }) => {
+const DashboardBreadcrumbs: React.FC<OrderBreadcrumbsProps> = ({ items }) => {
 	return (
 		<Breadcrumbs
 			separator={<NavigateNextIcon fontSize="small" />}
@@ -37,4 +37,4 @@ const OrderBreadcrumbs: React.FC<OrderBreadcrumbsProps> = ({ items }) => {
 	);
 };
 
-export default OrderBreadcrumbs;
+export default DashboardBreadcrumbs;
