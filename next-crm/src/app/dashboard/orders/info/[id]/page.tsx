@@ -12,7 +12,7 @@ import {
 } from '@/features/order/order.slice';
 import { fetchOneOrder } from '@/features/order/order.thunks';
 
-import OrderBreadcrumbs from '@/components/ui/order-breadcrumbs';
+import DashboardBreadcrumbs from '@/components/ui/dashboard-breadcrumbs';
 
 import { LoadingScreen } from '@/components';
 import { ROUTES } from '@/shared/constants/constants';
@@ -54,7 +54,7 @@ export default function Page() {
 	return (
 		<Box className="container">
 			<Box sx={{ py: 4 }}>
-				<OrderBreadcrumbs
+				<DashboardBreadcrumbs
 					items={[
 						{ label: 'Панель управления', href: '/dashboard' },
 						{ label: 'Заказы', href: '/dashboard/orders' },

@@ -22,10 +22,15 @@ export const API_ROUTES = {
 	EMAIL_CONFIRMATION: 'auth/email-confirmation',
 
 	CREATE_ORDER_CRM: '/orders/crm',
-	MAIN_SERVICES: '/orders/main-services',
 	ORDER_GET_PROFILE: '/orders?profile=true',
 	ORDER_GET_CRM: '/orders?crm=true',
 	ORDER_GET_ONE: '/orders',
+
 	USERS_GET_CRM: '/users',
+	USERS_GET_MASTERS: '/users/master',
 	ASSIGN_ROLE: '/users/admin/assign-role',
+
+	MAIN_SERVICES_GET: '/services/main-services',
+	MAIN_SERVICES_CREATE: '/services/main-services',
+	SERVICES_CREATE: '/services',
 };

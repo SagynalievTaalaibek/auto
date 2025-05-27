@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from '@/shared/hooks/hooksStore';
 
 const settings = [
 	{
-		name: 'Регисрация',
+		name: 'Регистрация',
 		url: ROUTES.REGISTER,
 	},
 	{

@@ -1,13 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { fetchUsersCRM, loginUser } from '@/features/auth/authThunks';
+import {
+	fetchMastersCRM,
+	fetchUsersCRM,
+	loginUser,
+} from '@/features/auth/authThunks';
 
 import { RootState } from '@/shared/store/store';
-import { IUser, IUsersDataCRM } from '@/shared/types/user';
+import { IMasterDataCRM, IUser, IUsersDataCRM } from '@/shared/types/user';
 
 interface AuthState {
 	user: IUser | null;
 	userCRM: IUsersDataCRM[];
+	masterCRM: IMasterDataCRM[];
 	loading: boolean;
 	error: string | null;
 	message: string | null;
@@ -16,6 +21,7 @@ interface AuthState {
 const initialState: AuthState = {
 	user: null,
 	userCRM: [],
+	masterCRM: [],
 	loading: false,
 	error: null,
 	message: null,
@@ -60,6 +66,20 @@ const authSlice = createSlice({
 				state.loading = false;
 				state.error = action.payload as string;
 			});
+
+		builder
+			.addCase(fetchMastersCRM.pending, state => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(fetchMastersCRM.fulfilled, (state, action) => {
+				state.loading = false;
+				state.masterCRM = action.payload;
+			})
+			.addCase(fetchMastersCRM.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload as string;
+			});
 	},
 });
 
@@ -68,3 +88,4 @@ export const { logout, saveUser } = authSlice.actions;
 export const selectUser = (state: RootState) => state.auth.user;
 export const selectUserLoading = (state: RootState) => state.auth.loading;
 export const selectUsersCRM = (state: RootState) => state.auth.userCRM;
+export const selectMastersCRM = (state: RootState) => state.auth.masterCRM;
