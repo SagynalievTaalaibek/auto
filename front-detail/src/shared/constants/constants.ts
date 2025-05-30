@@ -1,12 +1,15 @@
-export const BASE_URL =
-	process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:4000';
 export const ROUTES = {
+	LOGIN: '/auth/login',
+	REGISTER: '/auth/register',
+
+	// CLIENTS
+
+	// ADMIN
 	DASHBOARD: '/dashboard',
 	PROFILE: '/profile',
 	ORDER: '/dashboard/orders',
 	STAFF: '/dashboard/staff',
 	SERVICES: '/dashboard/services',
-	LOGIN: '/',
 	EMAIL_CONFIRMATION: 'auth/email-confirmation',
 
 	ORDER_INFO: '/dashboard/orders/info/',

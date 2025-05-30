@@ -81,10 +81,10 @@ export function AnalyticsPage() {
 				}}
 			>
 				{[
-					{ label: `Выручка (${period})`, value: '150 000 ₽' },
+					{ label: `Выручка (${period})`, value: '150 000' },
 					{ label: 'Количество заказов', value: '320' },
-					{ label: 'Средний чек', value: '4 700 ₽' },
-					{ label: 'Расходы на склад', value: '45 000 ₽' },
+					{ label: 'Средний чек', value: '4 700' },
+					{ label: 'Расходы на склад', value: '45 000' },
 				].map(({ label, value }) => (
 					<Paper
 						key={label}
