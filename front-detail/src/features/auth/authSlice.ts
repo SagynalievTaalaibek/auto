@@ -7,7 +7,12 @@ import type {
 	IUsersDataCRM,
 } from '../../shared/types/user.ts';
 
-import { fetchMastersCRM, fetchUsersCRM, loginUser } from './authThunks.ts';
+import {
+	fetchMastersCRM,
+	fetchUsersCRM,
+	loginUser,
+	verifyEmail,
+} from './authThunks.ts';
 
 interface AuthState {
 	user: IUser | null;
@@ -79,6 +84,19 @@ const authSlice = createSlice({
 			.addCase(fetchMastersCRM.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload as string;
+			});
+		builder
+			.addCase(verifyEmail.pending, state => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(verifyEmail.fulfilled, (state, action) => {
+				state.loading = false;
+				state.user = action.payload;
+			})
+			.addCase(verifyEmail.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.payload || 'Ошибка';
 			});
 	},
 });

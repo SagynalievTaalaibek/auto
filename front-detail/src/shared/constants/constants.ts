@@ -1,16 +1,20 @@
 export const ROUTES = {
 	LOGIN: '/auth/login',
 	REGISTER: '/auth/register',
+	NEW_VERIFICATION: '/auth/new-verification',
+	HOME: '/',
+	PROFILE: '/profile',
 
 	// CLIENTS
+	ABOUT: '/about',
+	SERVICES_CLIENT: '/services',
+	CONTACTS: '/contacts',
 
 	// ADMIN
 	DASHBOARD: '/dashboard',
-	PROFILE: '/profile',
 	ORDER: '/dashboard/orders',
 	STAFF: '/dashboard/staff',
 	SERVICES: '/dashboard/services',
-	EMAIL_CONFIRMATION: 'auth/email-confirmation',
 
 	ORDER_INFO: '/dashboard/orders/info/',
 	ORDER_EDIT: '/dashboard/orders/edit/',
@@ -21,10 +25,11 @@ export const ROUTES = {
 export const API_ROUTES = {
 	LOGIN: '/auth/login',
 	REGISTER: '/auth/register',
-	SESSION_CHECK: '/users/session',
-
-	LOGOUT: '/auth/logout',
 	EMAIL_CONFIRMATION: 'auth/email-confirmation',
+	LOGOUT: '/auth/logout',
+	CHECK_USER: '/auth/me',
+
+	SESSION_CHECK: '/users/session',
 
 	CREATE_ORDER_CRM: '/orders/crm',
 	ORDER_GET_PROFILE: '/orders?profile=true',
@@ -39,3 +44,10 @@ export const API_ROUTES = {
 	MAIN_SERVICES_CREATE: '/services/main-services',
 	SERVICES_CREATE: '/services',
 };
+
+export const NAVBAR_URL = [
+	{ name: 'Домой', path: '/' },
+	{ name: 'О нас', path: '/about' },
+	{ name: 'Услуги', path: '/services' },
+	{ name: 'Контакты', path: '/contacts' },
+];

@@ -3,11 +3,12 @@ import type { AxiosError } from 'axios';
 
 import axiosApi from '../../shared/config/axiosApi.ts';
 import { API_ROUTES } from '../../shared/constants/constants.ts';
-import type { TypeLoginSchema } from '../../shared/schemas';
+import type { TypeLoginSchema, TypeRegisterSchema } from '../../shared/schemas';
 import type { ErrorResponse } from '../../shared/types/error.ts';
 import type {
 	IAssignRole,
 	IMasterDataCRM,
+	IUser,
 	IUsersDataCRM,
 } from '../../shared/types/user.ts';
 
@@ -29,6 +30,22 @@ export const loginUser = createAsyncThunk(
 	},
 );
 
+export const registerUser = createAsyncThunk(
+	'auth/registerUser',
+	async (data: TypeRegisterSchema, { rejectWithValue }) => {
+		try {
+			const response = await axiosApi.post(API_ROUTES.REGISTER, data);
+			return response.data;
+		} catch (error: unknown) {
+			const axiosError = error as AxiosError<ErrorResponse>;
+
+			return rejectWithValue(
+				axiosError.response?.data?.message || 'Register failed',
+			);
+		}
+	},
+);
+
 export const logoutUser = createAsyncThunk<void, undefined>(
 	'auth/logoutUser',
 	async (_, { dispatch }) => {
@@ -36,6 +53,24 @@ export const logoutUser = createAsyncThunk<void, undefined>(
 		dispatch(logout());
 	},
 );
+
+export const fetchUser = createAsyncThunk(
+	'auth/fetchUser',
+	async (_, { dispatch }) => {
+		try {
+			const res = await axiosApi.get(API_ROUTES.CHECK_USER);
+			return res.data.user;
+		} catch (err: unknown) {
+			const axiosError = err as AxiosError<ErrorResponse>;
+
+			if (axiosError?.response?.status === 401) {
+				dispatch(logout());
+			}
+		}
+	},
+);
+
+/// ADMIN
 
 export const fetchUsersCRM = createAsyncThunk(
 	'auth/fetchUsersCRM',
@@ -72,3 +107,19 @@ export const assignRole = createAsyncThunk(
 		}
 	},
 );
+
+export const verifyEmail = createAsyncThunk<
+	IUser, // Тип возвращаемых данных (payload)
+	string | null, // Тип аргумента (token)
+	{ rejectValue: string } // Тип ошибки
+>('auth/verifyEmail', async (token, { rejectWithValue }) => {
+	try {
+		const response = await axiosApi.post<IUser>(API_ROUTES.EMAIL_CONFIRMATION, {
+			token,
+		});
+		return response.data;
+	} catch (error) {
+		console.error('verifyEmail error:', error);
+		return rejectWithValue('Ошибка подтверждения почты');
+	}
+});

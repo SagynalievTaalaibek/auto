@@ -1,6 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import NotFound from '../../components/commons/not-found/not-found.tsx';
+import NotFound from '../../components/ui/not-found/not-found.tsx';
+import { Login } from '../../pages/auth/login/login.tsx';
+import { NewVerificationPage } from '../../pages/auth/new-verification/new-verification.tsx';
+import { Register } from '../../pages/auth/register/register.tsx';
 import { ROUTES } from '../../shared/constants/constants.ts';
 import ClientLayout from '../layout/client-layout.tsx';
 import CrmLayout from '../layout/crm-layout.tsx';
@@ -15,16 +18,26 @@ export const router = createBrowserRouter([
 			{
 				path: '/',
 				element: <ClientLayout />,
-				children: [{ index: true, element: 'HOME CLIENT' }],
+				children: [
+					{ index: true, element: 'HOME CLIENT' },
+					{ path: ROUTES.ABOUT, element: 'HOME CLIENT' },
+					{ path: ROUTES.SERVICES_CLIENT, element: 'SERVICES' },
+					{ path: ROUTES.CONTACTS, element: 'CONTACTS' },
+					{ path: ROUTES.LOGIN, element: <Login /> },
+					{ path: ROUTES.REGISTER, element: <Register /> },
+				],
 			},
-			{ path: ROUTES.LOGIN, element: 'LOGIN' },
-			{ path: ROUTES.REGISTER, element: 'REGISTER' },
+
+			{
+				path: `${ROUTES.NEW_VERIFICATION}/:token`,
+				element: <NewVerificationPage />,
+			},
 
 			// Admin route
 			{
 				path: 'crm',
 				element: (
-					<ProtectedRoute roles={['admin', 'master']}>
+					<ProtectedRoute roles={['ADMIN', 'MASTER']}>
 						<CrmLayout />
 					</ProtectedRoute>
 				),
@@ -33,7 +46,7 @@ export const router = createBrowserRouter([
 					{
 						path: '/crm/reports',
 						element: (
-							<ProtectedRoute roles={['admin']}>'ADMIN ONLY'</ProtectedRoute>
+							<ProtectedRoute roles={['ADMIN']}>'ADMIN ONLY'</ProtectedRoute>
 						),
 					},
 				],

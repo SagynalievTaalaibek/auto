@@ -1,5 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
+import { Header } from '../../components/ui/header/header.tsx';
+
 const ClientLayout = () => {
 	/*const role = useSelector((state: RootState) => state.auth.user?.role);
 
@@ -10,7 +12,7 @@ const ClientLayout = () => {
 
 	return (
 		<div>
-			HEADER
+			<Header />
 			<main className="container">
 				<Outlet />
 			</main>
