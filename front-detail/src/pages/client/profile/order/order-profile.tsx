@@ -5,6 +5,11 @@ import {
 	Box,
 	Button,
 	Checkbox,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
 	FormControl,
 	InputLabel,
 	ListItemText,
@@ -65,6 +70,12 @@ export const OrderProfile = () => {
 
 	const [brand, setBrand] = useState<string>('');
 
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
+		min: 0,
+		max: 0,
+	});
+
 	const [errors, setErrors] = useState<
 		Partial<Record<keyof TypeOrderProfileSchema, string>>
 	>({});
@@ -76,7 +87,54 @@ export const OrderProfile = () => {
 		setFormData(prev => ({ ...prev, [key]: value }));
 	};
 
-	const handleSubmit = async () => {
+	const mockCalculatePriceRange = (
+		mainServiceIds: string[],
+		serviceIds: string[],
+		brand: string,
+		carBody: string,
+	) => {
+		// Примерно задаем цены
+
+		console.log(serviceIds);
+		console.log(mainServiceIds);
+		console.log(brand);
+		console.log(carBody);
+
+		let totalMin = 0;
+		let totalMax = 0;
+
+		mainServices.forEach(category => {
+			if (mainServiceIds.includes(category.id)) {
+				category.services.forEach(service => {
+					if (serviceIds.includes(service.id)) {
+						totalMin += service.basePriceMin;
+						totalMax += service.basePriceMax;
+					}
+				});
+			}
+		});
+
+		const bodyTypeCoefficient =
+			carsBodyTypeData.find(item => item.id === carBody)?.coefficient ?? 1;
+		const carCoefficient =
+			carsData.find(item => item.id === brand)?.coefficient ?? 1;
+
+		console.log(
+			'Price',
+			{ totalMin, totalMax },
+			'CEF-BODY=',
+			bodyTypeCoefficient,
+			'CEF_CAR=',
+			carCoefficient,
+		);
+
+		const min = Math.round(totalMin * bodyTypeCoefficient * carCoefficient);
+		const max = Math.round(totalMax * bodyTypeCoefficient * carCoefficient);
+
+		return { min, max };
+	};
+
+	const handleSubmit = () => {
 		const result = OrderProfileSchema.safeParse(formData);
 		if (!result.success) {
 			const fieldErrors: Partial<Record<keyof TypeOrderProfileSchema, string>> =
@@ -90,12 +148,31 @@ export const OrderProfile = () => {
 			return;
 		}
 
+		// Вычисляем mock-цену и показываем диалог
+		const { min, max } = mockCalculatePriceRange(
+			formData.orderCategoryIds,
+			formData.orderServiceIds,
+			brand,
+			formData.bodyTypeId,
+		);
+		setPriceRange({ min, max });
+		setIsDialogOpen(true);
+	};
+
+	const handleConfirmPrice = async () => {
+		setIsDialogOpen(false);
 		const response = await dispatch(createOrderClient(formData));
 
 		if (response.payload) {
 			showSnackbar(response.payload.message, 'success');
 			navigate(ROUTES.PROFILE);
 		}
+	};
+
+	const handleRejectPrice = () => {
+		setIsDialogOpen(false);
+		handleChange('orderCategoryIds', []);
+		handleChange('orderServiceIds', []);
 	};
 
 	// Для выбора модели по выбранной марке
@@ -109,7 +186,7 @@ export const OrderProfile = () => {
 		<Box sx={{ marginTop: '74px' }}>
 			<Box className="container">
 				<Box sx={{ mx: 'auto', mt: 4 }}>
-					<Typography variant="h5" mb={2}>
+					<Typography variant="h5" sx={{ padding: '15px 0' }}>
 						Создание заказа
 					</Typography>
 
@@ -285,6 +362,26 @@ export const OrderProfile = () => {
 					</Button>
 				</Box>
 			</Box>
+			<Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+				<DialogTitle>Подтверждение цены</DialogTitle>
+				<DialogContent>
+					<DialogContentText>
+						Примерная стоимость услуг:{' '}
+						<strong>
+							от {priceRange.min} до {priceRange.max} сом
+						</strong>
+						.
+						<br />
+						Вы согласны с данной ценой?
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleRejectPrice}>Нет</Button>
+					<Button onClick={handleConfirmPrice} variant="contained">
+						Да
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</Box>
 	);
 };

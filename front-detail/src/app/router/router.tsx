@@ -10,6 +10,19 @@ import { Home } from '../../pages/client/home/home.tsx';
 import { OrderProfile } from '../../pages/client/profile/order/order-profile.tsx';
 import { Profile } from '../../pages/client/profile/profile.tsx';
 import { Services } from '../../pages/client/services/services.tsx';
+import { DashboardAnalytics } from '../../pages/crm/dashboard/dashboard-analytics/dashboard-analytics.tsx';
+import { DashboardInventory } from '../../pages/crm/dashboard/dashboard-inventory/dashboard-inventory.tsx';
+import { DashboardOrdersAdd } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-add/dashboard-orders-add.tsx';
+import { DashboardOrdersEdit } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-edit/dashboard-orders-edit.tsx';
+import { DashboardOrdersInfo } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-info/dashboard-orders-info.tsx';
+import { DashboardOrdersMy } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-my/dashboard-orders-my.tsx';
+import { DashboardOrders } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders.tsx';
+import { DashboardReports } from '../../pages/crm/dashboard/dashboard-reports/dashboard-reports.tsx';
+import { DashboardServices } from '../../pages/crm/dashboard/dashboard-services/dashboard-services.tsx';
+import { DashboardSettings } from '../../pages/crm/dashboard/dashboard-settings/dashboard-settings.tsx';
+import { DashboardStaff } from '../../pages/crm/dashboard/dashboard-staff/dashboard-staff.tsx';
+import { Dashboard } from '../../pages/crm/dashboard/dashboard.tsx';
+import { Logout } from '../../pages/crm/logout/logout.tsx';
 import { ROUTES } from '../../shared/constants/constants.ts';
 import ClientLayout from '../layout/client-layout.tsx';
 import CrmLayout from '../layout/crm-layout.tsx';
@@ -31,6 +44,7 @@ export const router = createBrowserRouter([
 					{ path: ROUTES.CONTACTS, element: <Contacts /> },
 					{ path: ROUTES.LOGIN, element: <Login /> },
 					{ path: ROUTES.REGISTER, element: <Register /> },
+					{ path: 'logout', element: <Logout /> },
 					{
 						path: ROUTES.PROFILE,
 						element: (
@@ -56,19 +70,105 @@ export const router = createBrowserRouter([
 			},
 
 			// Admin route
+
 			{
-				path: 'crm',
-				element: (
-					<ProtectedRoute roles={['ADMIN', 'MASTER']}>
-						<CrmLayout />
-					</ProtectedRoute>
-				),
+				path: ROUTES.DASHBOARD,
+				element: <CrmLayout />,
 				children: [
-					{ index: true, element: 'ADMIN DASHBOARD' },
 					{
-						path: '/crm/reports',
+						index: true,
 						element: (
-							<ProtectedRoute roles={['ADMIN']}>'ADMIN ONLY'</ProtectedRoute>
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<Dashboard />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_SERVICES,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardServices />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_INVENTORY,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardInventory />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_ORDER,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardOrders />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: `${ROUTES.DASHBOARD_ORDER_EDIT}/:id`,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardOrdersEdit />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: `${ROUTES.DASHBOARD_ORDER_INFO}/:id`,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardOrdersInfo />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_ORDER_ADD,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardOrdersAdd />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_ORDER_MY,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardOrdersMy />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_STAFF,
+						element: (
+							<ProtectedRoute roles={['ADMIN']}>
+								<DashboardStaff />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_ANALYTICS,
+						element: (
+							<ProtectedRoute roles={['ADMIN']}>
+								<DashboardAnalytics />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_REPORTS,
+						element: (
+							<ProtectedRoute roles={['ADMIN']}>
+								<DashboardReports />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_SETTINGS,
+						element: (
+							<ProtectedRoute roles={['ADMIN']}>
+								<DashboardSettings />
+							</ProtectedRoute>
 						),
 					},
 				],
