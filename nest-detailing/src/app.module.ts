@@ -12,6 +12,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { OrderModule } from './order/order.module';
 import { ServiceModule } from './service/service.module';
+import { CarsModule } from './cars/cars.module';
 
 @Module({
 	imports: [
@@ -27,7 +28,8 @@ import { ServiceModule } from './service/service.module';
 		PasswordRecoveryModule,
 		TwoFactorAuthModule,
 		OrderModule,
-		ServiceModule
+		ServiceModule,
+		CarsModule
 	]
 })
 export class AppModule {}

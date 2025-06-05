@@ -2,32 +2,26 @@
 
 import React, { useState } from 'react';
 
+import { Edit as EditIcon, Email, Phone } from '@mui/icons-material';
 import {
 	Box,
 	Button,
-	FormControl,
 	FormControlLabel,
-	InputLabel,
-	MenuItem,
 	Paper,
-	Select,
+	Stack,
 	Switch,
 	TextField,
 	Typography,
 } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 
 export function SettingsPage() {
-	// Пример стейтов для формы
 	const [centerName, setCenterName] = useState('Детейлинг Центр');
 	const [logoUrl, setLogoUrl] = useState('');
 	const [workingHours, setWorkingHours] = useState('9:00 - 18:00');
 	const [notificationEmail, setNotificationEmail] =
 		useState('notify@example.com');
 	const [notificationTelegram, setNotificationTelegram] = useState(false);
-
-	const [userRole, setUserRole] = useState('admin');
-	const [carType, setCarType] = useState('Седан');
-	const [serviceType, setServiceType] = useState('Полировка');
 
 	const handleSave = () => {
 		// Здесь логика сохранения настроек, пока просто лог
@@ -37,9 +31,6 @@ export function SettingsPage() {
 			workingHours,
 			notificationEmail,
 			notificationTelegram,
-			userRole,
-			carType,
-			serviceType,
 		});
 	};
 
@@ -75,58 +66,24 @@ export function SettingsPage() {
 
 			<Paper sx={{ p: 3, mb: 4 }}>
 				<Typography variant="h6" mb={2}>
-					Настройка пользователей и ролей
+					Мои данные
 				</Typography>
-				<FormControl fullWidth>
-					<InputLabel id="user-role-label">Роль пользователя</InputLabel>
-					<Select
-						labelId="user-role-label"
-						value={userRole}
-						label="Роль пользователя"
-						onChange={e => setUserRole(e.target.value)}
-					>
-						<MenuItem value="admin">Администратор</MenuItem>
-						<MenuItem value="master">Мастер</MenuItem>
-						<MenuItem value="client">Клиент</MenuItem>
-					</Select>
-				</FormControl>
-			</Paper>
-
-			<Paper sx={{ p: 3, mb: 4 }}>
-				<Typography variant="h6" mb={2}>
-					Настройка видов авто и услуг
-				</Typography>
-				<Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-					<FormControl sx={{ minWidth: 180 }}>
-						<InputLabel id="car-type-label">Вид авто</InputLabel>
-						<Select
-							labelId="car-type-label"
-							value={carType}
-							label="Вид авто"
-							onChange={e => setCarType(e.target.value)}
-						>
-							<MenuItem value="Седан">Седан</MenuItem>
-							<MenuItem value="Внедорожник">Внедорожник</MenuItem>
-							<MenuItem value="Хэтчбек">Хэтчбек</MenuItem>
-							<MenuItem value="Купе">Купе</MenuItem>
-						</Select>
-					</FormControl>
-
-					<FormControl sx={{ minWidth: 180 }}>
-						<InputLabel id="service-type-label">Тип услуги</InputLabel>
-						<Select
-							labelId="service-type-label"
-							value={serviceType}
-							label="Тип услуги"
-							onChange={e => setServiceType(e.target.value)}
-						>
-							<MenuItem value="Полировка">Полировка</MenuItem>
-							<MenuItem value="Тонирование">Тонирование</MenuItem>
-							<MenuItem value="Химчистка">Химчистка</MenuItem>
-							<MenuItem value="Оклейка">Оклейка</MenuItem>
-						</Select>
-					</FormControl>
-				</Box>
+				<Stack spacing={1}>
+					<Stack direction="row" alignItems="center" spacing={1}>
+						<Phone fontSize="small" />
+						<Typography>+996505601100</Typography>
+						<IconButton size="small">
+							<EditIcon fontSize="small" />
+						</IconButton>
+					</Stack>
+					<Stack direction="row" alignItems="center" spacing={1}>
+						<Email fontSize="small" />
+						<Typography>sagynalievv.t@gmail.com</Typography>
+						<IconButton size="small">
+							<EditIcon fontSize="small" />
+						</IconButton>
+					</Stack>
+				</Stack>
 			</Paper>
 
 			<Paper sx={{ p: 3, mb: 4 }}>

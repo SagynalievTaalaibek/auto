@@ -4,6 +4,8 @@ export const ROUTES = {
 	DASHBOARD: '/dashboard',
 	PROFILE: '/profile',
 	ORDER: '/dashboard/orders',
+	STAFF: '/dashboard/staff',
+	SERVICES: '/dashboard/services',
 	LOGIN: '/',
 	EMAIL_CONFIRMATION: 'auth/email-confirmation',
 

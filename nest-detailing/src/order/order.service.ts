@@ -25,12 +25,12 @@ export class OrderService {
 	async createOrderCRM(dto: CreateOrderCRMDto) {
 		const {
 			userId,
-			carBrand,
-			carModel,
+			modelCarId,
+			bodyTypeId,
 			carYear,
 			carColor,
-			categoryIds,
-			serviceIds,
+			orderCategoryIds,
+			orderServiceIds,
 			masterId,
 			startTime,
 			endTime,
@@ -42,8 +42,8 @@ export class OrderService {
 		await this.prismaService.order.create({
 			data: {
 				userId,
-				carBrand,
-				carModel,
+				modelCarId,
+				bodyTypeId,
 				carYear,
 				carColor,
 				masterId,
@@ -53,12 +53,12 @@ export class OrderService {
 				photos: photos ?? [],
 				notes,
 				orderCategories: {
-					create: categoryIds.map(categoryId => ({
+					create: orderCategoryIds.map(categoryId => ({
 						category: { connect: { id: categoryId } }
 					}))
 				},
 				orderServices: {
-					create: serviceIds.map(serviceId => ({
+					create: orderServiceIds.map(serviceId => ({
 						service: { connect: { id: serviceId } }
 					}))
 				}
@@ -80,32 +80,32 @@ export class OrderService {
 		};
 	}
 
-	async createOrder(dto: CreateOrderClientDto, userId: string) {
+	async createOrderClient(dto: CreateOrderClientDto, userId: string) {
 		const {
-			carBrand,
-			carModel,
-			carYear,
+			modelCarId,
 			carColor,
-			categoryIds,
-			serviceIds,
+			carYear,
+			bodyTypeId,
+			orderCategoryIds,
+			orderServiceIds,
 			notes
 		} = dto;
 
 		await this.prismaService.order.create({
 			data: {
 				userId,
-				carBrand,
-				carModel,
-				carYear,
+				modelCarId,
 				carColor,
+				carYear,
+				bodyTypeId,
 				notes,
 				orderCategories: {
-					create: categoryIds.map(categoryId => ({
+					create: orderCategoryIds.map(categoryId => ({
 						category: { connect: { id: categoryId } }
 					}))
 				},
 				orderServices: {
-					create: serviceIds.map(serviceId => ({
+					create: orderServiceIds.map(serviceId => ({
 						service: { connect: { id: serviceId } }
 					}))
 				}
@@ -133,7 +133,11 @@ export class OrderService {
 				},
 				select: {
 					id: true,
-					carBrand: true,
+					modelCar: {
+						select: {
+							name: true
+						}
+					},
 					orderCategories: {
 						select: {
 							category: {
@@ -154,8 +158,7 @@ export class OrderService {
 			return this.prismaService.order.findMany({
 				select: {
 					id: true,
-					carBrand: true,
-					carModel: true,
+					modelCar: true,
 					carYear: true,
 					carColor: true,
 					createdAt: true,
@@ -196,6 +199,11 @@ export class OrderService {
 			const order = await this.prismaService.order.findUnique({
 				where: { id },
 				include: {
+					modelCar: {
+						include: {
+							brand: true
+						}
+					},
 					orderCategories: {
 						include: { category: true }
 					},
@@ -212,8 +220,8 @@ export class OrderService {
 
 			return {
 				userId: order.userId,
-				carBrand: order.carBrand,
-				carModel: order.carModel,
+				carBrand: order.modelCar.brand.name,
+				carModel: order.modelCar.name,
 				carYear: order.carYear,
 				carColor: order.carColor,
 				categoryIds: order.orderCategories.map(oc => oc.category.id),
@@ -254,21 +262,18 @@ export class OrderService {
 		});
 	}
 
-	/*async updateOrder(id: string, dto: CreateOrderClientDto, userId: string) {
+	async updateOrder(id: string, dto: CreateOrderClientDto, userId: string) {
 		const order = await this.prismaService.order.findUnique({ where: { id } });
 		if (!order) throw new NotFoundException('Order not found');
 
 		const {
-			carBrand,
-			carModel,
-			carYear,
+			modelCarId,
 			carColor,
-			categoryIds,
-			serviceIds,
-			notes,
-			masterId,
-			photos,
-			totalPrice
+			carYear,
+			bodyTypeId,
+			orderCategoryIds,
+			orderServiceIds,
+			notes
 		} = dto;
 
 		// Удалим старые связи перед добавлением новых
@@ -283,29 +288,27 @@ export class OrderService {
 			where: { id },
 			data: {
 				userId,
-				carBrand,
-				carModel,
+				modelCarId,
 				carYear,
 				carColor,
 				notes,
-				masterId,
-				photos,
-				totalPrice,
+				bodyTypeId,
 				orderCategories: {
-					create: categoryIds.map(categoryId => ({
+					create: orderCategoryIds.map(categoryId => ({
 						category: { connect: { id: categoryId } }
 					}))
 				},
 				orderServices: {
-					create: serviceIds.map(serviceId => ({
+					create: orderServiceIds.map(serviceId => ({
 						service: { connect: { id: serviceId } }
 					}))
 				}
 			},
 			include: {
 				orderCategories: { include: { category: true } },
-				orderServices: { include: { service: true } }
+				orderServices: { include: { service: true } },
+				modelCar: { include: { brand: true } }
 			}
 		});
-	}*/
+	}
 }

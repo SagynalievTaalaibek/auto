@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -68,34 +62,18 @@ enum TokenType {
 
 // ЗАКАЗ
 
-model ServiceCategory {
-  id            String          @id @default(uuid())
-  name          String
-  services      Service[]
-  OrderCategory OrderCategory[]
-
-  @@map("service_categories")
-}
-
-model Service {
-  id         String          @id @default(uuid())
-  name       String
-  categoryId String          @map("category_id")
-  category   ServiceCategory @relation(fields: [categoryId], references: [id])
-
-  orderServices OrderService[]
-
-  @@map("services")
-}
-
 model Order {
   id String @id @default(uuid())
 
   userId String @map("user_id")
   user   User   @relation("Orders", fields: [userId], references: [id])
 
-  carBrand String @map("car_brand")
-  carModel String @map("car_model")
+  modelCarId String   @map("model_car_id")
+  modelCar   ModelCar @relation(fields: [modelCarId], references: [id])
+
+  bodyTypeId String   @map("body_type_id")
+  bodyType   BodyType @relation(fields: [bodyTypeId], references: [id])
+
   carYear  String @map("car_year")
   carColor String @map("car_color")
 
@@ -117,6 +95,61 @@ model Order {
   orderServices   OrderService[] // конкретные подуслуги
 
   @@map("orders")
+}
+
+model ServiceCategory {
+  id            String          @id @default(uuid())
+  name          String
+  img           String
+  description   String
+  services      Service[]
+  OrderCategory OrderCategory[]
+
+  @@map("service_categories")
+}
+
+model Service {
+  id           String          @id @default(uuid())
+  name         String
+  description  String?
+  basePriceMin Int             @map("base_price_min")
+  basePriceMax Int             @map("base_price_max")
+  categoryId   String          @map("category_id")
+  category     ServiceCategory @relation(fields: [categoryId], references: [id])
+
+  orderServices OrderService[]
+
+  @@map("services")
+}
+
+model Brand {
+  id          String     @id @default(uuid())
+  name        String
+  coefficient Float      @default(1.0)
+  models      ModelCar[]
+
+  @@map("brand")
+}
+
+model BodyType {
+  id          String @id @default(uuid())
+  name        String @unique
+  coefficient Float  @default(1.0)
+
+  orders Order[]
+
+  @@map("body_type")
+}
+
+model ModelCar {
+  id      String @id @default(uuid())
+  name    String
+  brandId String @map("brand_id")
+  brand   Brand  @relation(fields: [brandId], references: [id])
+
+  orders Order[]
+
+  @@map("model_car")
 }
 
 model OrderCategory {

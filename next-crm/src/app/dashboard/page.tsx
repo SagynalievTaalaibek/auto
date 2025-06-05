@@ -20,6 +20,9 @@ import {
 	Tooltip,
 	Typography,
 } from '@mui/material';
+import { useRouter } from 'next/navigation';
+
+import { ROUTES } from '@/shared/constants/constants';
 
 // --- Моковые данные статистики ---
 const stats = [
@@ -35,7 +38,7 @@ const stats = [
 	},
 	{
 		label: 'Выручка',
-		value: '1 250 000 ₽',
+		value: '1 250 000',
 		icon: <MonetizationOnIcon color="success" fontSize="large" />,
 	},
 	{
@@ -71,6 +74,8 @@ const activeOrders = [
 ];
 
 export default function DashboardPage() {
+	const router = useRouter();
+
 	return (
 		<Box sx={{ width: '100%', p: 3 }}>
 			<Typography variant="h4" sx={{ fontWeight: 600, mb: 3 }} gutterBottom>
@@ -173,6 +178,7 @@ export default function DashboardPage() {
 						startIcon={<AddCircleOutlineIcon />}
 						fullWidth
 						size="large"
+						onClick={() => router.push(ROUTES.ORDER_ADD)}
 					>
 						Создать заказ
 					</Button>
@@ -181,14 +187,16 @@ export default function DashboardPage() {
 						startIcon={<PersonAddIcon />}
 						fullWidth
 						size="large"
+						onClick={() => router.push(ROUTES.STAFF)}
 					>
-						Добавить клиента
+						Добавить персонал
 					</Button>
 					<Button
 						variant="outlined"
 						startIcon={<EventNoteIcon />}
 						fullWidth
 						size="large"
+						onClick={() => router.push(ROUTES.SERVICES)}
 					>
 						Записать на услугу
 					</Button>
