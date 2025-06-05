@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { CompanyAbout } from '../../../components/client/profile/company-about.tsx';
-import { Orders } from '../../../components/client/profile/orders.tsx';
+import { OrdersTable } from '../../../components/client/profile/orders-table.tsx';
 import { SettingsProfile } from '../../../components/client/profile/settings-profile.tsx';
 import { LoadingScreen } from '../../../components/ui/loading-screen/loading-screen.tsx';
 import { selectOrdersLoading } from '../../../features/orders/orders.slice.ts';
@@ -28,7 +28,7 @@ export const Profile = () => {
 		<Box className="container" sx={{ marginTop: '70px' }}>
 			<CompanyAbout />
 			<SettingsProfile />
-			{loading ? <LoadingScreen /> : <Orders />}
+			{loading ? <LoadingScreen /> : <OrdersTable />}
 			<Box sx={{ mt: 4 }}>
 				<Card sx={{ p: 3, backgroundColor: '#fff8e1' }}>
 					<Typography variant="h6" gutterBottom>

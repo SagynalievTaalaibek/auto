@@ -14,7 +14,7 @@ import {
 import { selectOrdersGetProfile } from '../../../features/orders/orders.slice.ts';
 import { useAppSelector } from '../../../shared/hooks/hooksStore.ts';
 
-export function Orders() {
+export function OrdersTable() {
 	const orders = useAppSelector(selectOrdersGetProfile);
 
 	return (
