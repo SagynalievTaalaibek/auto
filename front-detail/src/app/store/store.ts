@@ -12,6 +12,9 @@ import {
 import storage from 'redux-persist/lib/storage';
 
 import { authReducer } from '../../features/auth/authSlice.ts';
+import { carsReducer } from '../../features/cars/cars.slice.ts';
+import { ordersReducer } from '../../features/orders/orders.slice.ts';
+import { serviceReducer } from '../../features/services/services.slice.ts';
 
 const usersPersistConfig = {
 	key: 'auto-detailing:users',
@@ -21,9 +24,12 @@ const usersPersistConfig = {
 
 const rootReducer = combineReducers({
 	auth: persistReducer(usersPersistConfig, authReducer),
+	services: serviceReducer,
+	orders: ordersReducer,
+	cars: carsReducer,
 	/*drawer: drawerReducer,
 	orders: orderReducer,
-	services: serviceReducer,
+	,
 	inventory: inventoryReducer,
 	reports: reportsReducer,*/
 });

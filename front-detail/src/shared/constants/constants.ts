@@ -4,6 +4,7 @@ export const ROUTES = {
 	NEW_VERIFICATION: '/auth/new-verification',
 	HOME: '/',
 	PROFILE: '/profile',
+	PROFILE_ORDER: '/profile/order',
 
 	// CLIENTS
 	ABOUT: '/about',
@@ -32,6 +33,7 @@ export const API_ROUTES = {
 	SESSION_CHECK: '/users/session',
 
 	CREATE_ORDER_CRM: '/orders/crm',
+	CREATE_ORDER_CLIENT: '/orders/client',
 	ORDER_GET_PROFILE: '/orders?profile=true',
 	ORDER_GET_CRM: '/orders?crm=true',
 	ORDER_GET_ONE: '/orders',
@@ -43,6 +45,9 @@ export const API_ROUTES = {
 	MAIN_SERVICES_GET: '/services/main-services',
 	MAIN_SERVICES_CREATE: '/services/main-services',
 	SERVICES_CREATE: '/services',
+
+	CARS_GET: '/cars',
+	CARS_BODY_TYPE_GET: '/cars/body-type',
 };
 
 export const NAVBAR_URL = [

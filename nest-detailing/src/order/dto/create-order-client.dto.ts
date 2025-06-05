@@ -1,25 +1,14 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateOrderClientDto {
-	@IsString()
-	carBrand: string;
+	@IsUUID() modelCarId: string;
+	@IsUUID() bodyTypeId: string;
 
-	@IsString()
-	carModel: string;
+	@IsString() carYear: string;
+	@IsString() carColor: string;
 
-	@IsString()
-	carYear: string;
+	@IsOptional() notes?: string;
 
-	@IsString()
-	carColor: string;
-
-	@IsArray()
-	categoryIds: string[];
-
-	@IsArray()
-	serviceIds: string[];
-
-	@IsOptional()
-	@IsString()
-	notes?: string;
+	@IsArray() orderCategoryIds: string[];
+	@IsArray() orderServiceIds: string[];
 }

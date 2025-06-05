@@ -13,7 +13,7 @@ const ClientLayout = () => {
 	return (
 		<div>
 			<Header />
-			<main className="container">
+			<main>
 				<Outlet />
 			</main>
 		</div>

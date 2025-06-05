@@ -1,3 +1,3 @@
 export * from './login.schema';
 export * from './register.schema';
-export * from './order.create.schema';
+export * from './order.create.profile.schema.ts';

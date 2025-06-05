@@ -2,7 +2,6 @@ import {
 	IsArray,
 	IsDateString,
 	IsEnum,
-	IsNumber,
 	IsOptional,
 	IsString,
 	IsUUID
@@ -11,55 +10,24 @@ import {
 import { OrderStatus } from '../../../generated/prisma';
 
 export class CreateOrderCRMDto {
-	@IsUUID()
-	userId: string;
+	@IsUUID() userId: string;
+	@IsUUID() modelCarId: string;
+	@IsUUID() bodyTypeId: string;
 
-	@IsString()
-	carBrand: string;
+	@IsString() carYear: string;
+	@IsString() carColor: string;
 
-	@IsString()
-	carModel: string;
+	@IsEnum(OrderStatus) @IsOptional() status?: OrderStatus;
 
-	@IsString()
-	carYear: string;
+	@IsDateString() @IsOptional() startTime?: Date;
+	@IsDateString() @IsOptional() endTime?: Date;
 
-	@IsString()
-	carColor: string;
+	@IsOptional() totalPrice?: number;
+	@IsOptional() notes?: string;
 
-	@IsArray()
-	@IsUUID(undefined, { each: true })
-	categoryIds: string[];
+	@IsUUID() @IsOptional() masterId?: string;
+	@IsArray() @IsOptional() photos?: string[];
 
-	@IsArray()
-	@IsUUID(undefined, { each: true })
-	serviceIds: string[];
-
-	@IsOptional()
-	@IsUUID()
-	masterId?: string;
-
-	@IsOptional()
-	@IsDateString()
-	startTime?: string;
-
-	@IsOptional()
-	@IsDateString()
-	endTime?: string;
-
-	@IsOptional()
-	@IsNumber()
-	totalPrice?: number;
-
-	@IsOptional()
-	@IsString()
-	notes?: string;
-
-	@IsOptional()
-	@IsEnum(OrderStatus)
-	status?: OrderStatus;
-
-	@IsOptional()
-	@IsArray()
-	@IsString({ each: true })
-	photos?: string[];
+	@IsArray() orderCategoryIds: string[];
+	@IsArray() orderServiceIds: string[];
 }

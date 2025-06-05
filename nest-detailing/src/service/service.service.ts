@@ -9,22 +9,27 @@ export class ServiceService {
 	constructor(private readonly prismaService: PrismaService) {}
 
 	async createMainService(dto: CreateMainServiceDto) {
-		const { name } = dto;
+		const { name, description, img } = dto;
 
 		return this.prismaService.serviceCategory.create({
 			data: {
-				name
+				name,
+				description,
+				img
 			}
 		});
 	}
 
 	async createServices(dto: CreateServicesDto) {
-		const { name, categoryId } = dto;
+		const { name, categoryId, description, basePriceMin, basePriceMax } = dto;
 
 		return this.prismaService.service.create({
 			data: {
 				name,
-				categoryId
+				categoryId,
+				description,
+				basePriceMin,
+				basePriceMax
 			},
 			include: {
 				orderServices: {

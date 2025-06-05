@@ -1,4 +1,4 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class CreateServicesDto {
 	@IsString()
@@ -6,4 +6,13 @@ export class CreateServicesDto {
 
 	@IsUUID()
 	categoryId: string;
+
+	@IsString()
+	description: string;
+
+	@IsNumber()
+	basePriceMin: number;
+
+	@IsNumber()
+	basePriceMax: number;
 }

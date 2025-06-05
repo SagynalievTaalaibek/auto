@@ -32,7 +32,6 @@ export class ServiceController {
 		return this.serviceService.createServices(dto);
 	}
 
-	@Authorization()
 	@HttpCode(HttpStatus.OK)
 	@Get('main-services')
 	async getMainService() {

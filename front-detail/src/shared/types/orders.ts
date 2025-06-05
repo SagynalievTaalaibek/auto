@@ -1,19 +1,3 @@
-// Service
-export interface ServiceCategory {
-	id: string;
-	name: string;
-}
-
-export interface Service {
-	id: string;
-	name: string;
-	categoryId: string;
-}
-
-export interface IMainServiceData extends ServiceCategory {
-	services: Service[];
-}
-
 // types/order.ts
 export type OrderStatus =
 	| 'NEW'
@@ -90,6 +74,23 @@ export interface OrderGetCRM {
 		email: string;
 		phone: string;
 	};
+
+	createdAt: string;
+}
+
+export interface OrderGetProfile {
+	id: string;
+
+	modelCar: {
+		name: string;
+	};
+	status: OrderStatus;
+
+	orderCategories: {
+		category: {
+			name: string;
+		};
+	}[];
 
 	createdAt: string;
 }

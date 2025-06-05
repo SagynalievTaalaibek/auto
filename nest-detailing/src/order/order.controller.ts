@@ -34,7 +34,7 @@ export class OrderController {
 		@Authorized('id') userId: string,
 		@Body() dto: CreateOrderClientDto
 	) {
-		return this.orderService.createOrder(dto, userId);
+		return this.orderService.createOrderClient(dto, userId);
 	}
 
 	/*@Authorization()
