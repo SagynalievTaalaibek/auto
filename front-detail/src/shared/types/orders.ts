@@ -1,4 +1,6 @@
 // types/order.ts
+import type { TypeOrderCRMSchema, TypeOrderProfileSchema } from '../schemas';
+
 export type OrderStatus =
 	| 'NEW'
 	| 'CONFIRMED'
@@ -8,36 +10,6 @@ export type OrderStatus =
 	| 'CLOSED'
 	| 'CANCELLED'
 	| 'RESCHEDULED';
-
-export interface IOrder {
-	id: string;
-	userId: string;
-	carBrand: string;
-	carModel: string;
-	carYear: string;
-	carColor: string;
-	status: OrderStatus;
-	startTime: string; // ISO формат
-	endTime: string | null;
-	totalPrice: number | null;
-	notes: string;
-	masterId: string;
-	photos: string[];
-	createdAt: string;
-	updatedAt: string;
-	user: {
-		id: string;
-		name: string;
-		email: string;
-		phone: string;
-	};
-	master: {
-		id: string;
-		name: string;
-	};
-	orderCategories: OrderCategory[];
-	orderServices: OrderService[];
-}
 
 export interface OrderCategory {
 	id: string;
@@ -56,15 +28,61 @@ export interface OrderService {
 	service: {
 		id: string;
 		name: string;
+		basePriceMin: number;
+		basePriceMax: number;
 		categoryId: string;
 	};
+}
+
+export interface IOrder {
+	id: string;
+	userId: string;
+	modelCar: {
+		id: string;
+		name: string;
+		brand: {
+			id: string;
+			name: string;
+			coefficient: number;
+		};
+	};
+	bodyType: {
+		id: string;
+		name: string;
+		coefficient: number;
+	};
+	carYear: string;
+	carColor: string;
+	status: OrderStatus;
+	startTime: string; // ISO формат
+	endTime: string | null;
+	totalPrice: number | null;
+	notes: string;
+	photos: string[];
+	createdAt: string;
+	user: {
+		id: string;
+		name: string;
+		email: string;
+		phone: string;
+	};
+	master: {
+		id: string;
+		name: string;
+	};
+	orderCategories: OrderCategory[];
+	orderServices: OrderService[];
 }
 
 export interface OrderGetCRM {
 	id: string;
 
-	carBrand: string;
-	carModel: string;
+	modelCar: {
+		name: string;
+		brand: {
+			name: string;
+		};
+	};
 	carYear: string;
 	carColor: string;
 	status: OrderStatus;
@@ -94,3 +112,6 @@ export interface OrderGetProfile {
 
 	createdAt: string;
 }
+
+export type UnifiedOrderSchema = TypeOrderProfileSchema &
+	Partial<TypeOrderCRMSchema>;

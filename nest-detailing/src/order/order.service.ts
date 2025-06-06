@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateOrderClientDto } from '@/order/dto/create-order-client.dto';
 import { CreateOrderCRMDto } from '@/order/dto/create-order-crm.dto';
+import { UpdateOrderStatusDto } from '@/order/dto/update-order-status.dto';
 import { PrismaService } from '@/prisma/prisma.service';
 
 import { OrderStatus } from '../../generated/prisma';
@@ -158,7 +159,16 @@ export class OrderService {
 			return this.prismaService.order.findMany({
 				select: {
 					id: true,
-					modelCar: true,
+					modelCar: {
+						select: {
+							name: true,
+							brand: {
+								select: {
+									name: true
+								}
+							}
+						}
+					},
 					carYear: true,
 					carColor: true,
 					createdAt: true,
@@ -199,11 +209,6 @@ export class OrderService {
 			const order = await this.prismaService.order.findUnique({
 				where: { id },
 				include: {
-					modelCar: {
-						include: {
-							brand: true
-						}
-					},
 					orderCategories: {
 						include: { category: true }
 					},
@@ -219,25 +224,25 @@ export class OrderService {
 				);
 
 			return {
-				userId: order.userId,
-				carBrand: order.modelCar.brand.name,
-				carModel: order.modelCar.name,
-				carYear: order.carYear,
-				carColor: order.carColor,
-				categoryIds: order.orderCategories.map(oc => oc.category.id),
-				serviceIds: order.orderServices.map(os => os.service.id),
-				masterId: order.masterId ?? undefined,
-				startTime: order.startTime?.toISOString() ?? '',
-				endTime: order.endTime?.toISOString() ?? '',
-				totalPrice: order.totalPrice ?? 0,
-				notes: order.notes ?? '',
-				photos: order.photos ?? []
+				...order,
+				orderCategoryIds: order.orderCategories.map(oc => oc.category.id),
+				orderServiceIds: order.orderServices.map(os => os.service.id)
 			};
 		}
 
 		return this.prismaService.order.findUnique({
 			where: { id },
-			include: {
+			select: {
+				id: true,
+				carYear: true,
+				carColor: true,
+				status: true,
+				startTime: true,
+				endTime: true,
+				totalPrice: true,
+				notes: true,
+				photos: true,
+				createdAt: true,
 				user: {
 					select: {
 						id: true,
@@ -252,27 +257,70 @@ export class OrderService {
 						name: true
 					}
 				},
+				modelCar: {
+					select: {
+						id: true,
+						name: true,
+						brand: {
+							select: {
+								id: true,
+								name: true,
+								coefficient: true
+							}
+						}
+					}
+				},
+				bodyType: {
+					select: {
+						id: true,
+						name: true,
+						coefficient: true
+					}
+				},
 				orderCategories: {
-					include: { category: true }
+					include: {
+						category: {
+							select: {
+								id: true,
+								name: true
+							}
+						}
+					}
 				},
 				orderServices: {
-					include: { service: true }
+					include: {
+						service: {
+							select: {
+								id: true,
+								name: true,
+								basePriceMin: true,
+								basePriceMax: true,
+								categoryId: true
+							}
+						}
+					}
 				}
 			}
 		});
 	}
 
-	async updateOrder(id: string, dto: CreateOrderClientDto, userId: string) {
+	async updateOrder(id: string, dto: CreateOrderCRMDto) {
 		const order = await this.prismaService.order.findUnique({ where: { id } });
 		if (!order) throw new NotFoundException('Order not found');
 
 		const {
+			userId,
 			modelCarId,
-			carColor,
-			carYear,
 			bodyTypeId,
+			carYear,
+			carColor,
 			orderCategoryIds,
 			orderServiceIds,
+			masterId,
+			startTime,
+			endTime,
+			totalPrice,
+			photos,
 			notes
 		} = dto;
 
@@ -293,6 +341,11 @@ export class OrderService {
 				carColor,
 				notes,
 				bodyTypeId,
+				endTime,
+				startTime,
+				masterId,
+				totalPrice,
+				photos,
 				orderCategories: {
 					create: orderCategoryIds.map(categoryId => ({
 						category: { connect: { id: categoryId } }
@@ -310,5 +363,24 @@ export class OrderService {
 				modelCar: { include: { brand: true } }
 			}
 		});
+	}
+
+	async updateOrderStatus(id: string, dto: UpdateOrderStatusDto) {
+		await this.prismaService.order.update({
+			where: { id },
+			data: {
+				status: dto.status
+			},
+			include: {
+				user: true,
+				modelCar: {
+					include: { brand: true }
+				}
+			}
+		});
+
+		return {
+			message: 'Статус обновлен'
+		};
 	}
 }

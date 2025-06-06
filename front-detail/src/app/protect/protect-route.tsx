@@ -39,5 +39,5 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 		return <Navigate to={ROUTES.LOGIN} replace />;
 	}
 
-	return <>{children}</>;
+	return children;
 };

@@ -13,7 +13,9 @@ import storage from 'redux-persist/lib/storage';
 
 import { authReducer } from '../../features/auth/authSlice.ts';
 import { carsReducer } from '../../features/cars/cars.slice.ts';
+import { inventoryReducer } from '../../features/inventory/inventory.slice.ts';
 import { ordersReducer } from '../../features/orders/orders.slice.ts';
+import { reportsReducer } from '../../features/reports/reports.slice.ts';
 import { serviceReducer } from '../../features/services/services.slice.ts';
 
 const usersPersistConfig = {
@@ -27,11 +29,8 @@ const rootReducer = combineReducers({
 	services: serviceReducer,
 	orders: ordersReducer,
 	cars: carsReducer,
-	/*drawer: drawerReducer,
-	orders: orderReducer,
-	,
+	reports: reportsReducer,
 	inventory: inventoryReducer,
-	reports: reportsReducer,*/
 });
 
 export const store = configureStore({

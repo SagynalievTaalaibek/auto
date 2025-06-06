@@ -2,23 +2,25 @@ import React from 'react';
 
 const inputStyle: React.CSSProperties = {
 	width: '100%',
-	padding: '16.5px 14px', // как в TextField
+	padding: '16.5px 14px',
 	fontSize: '1rem',
 	fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
 	borderRadius: 4,
-	border: '1px solid rgba(0, 0, 0, 0.23)',
+	borderWidth: '1px', // Заменяем border на отдельные свойства
+	borderStyle: 'solid',
+	borderColor: 'rgba(0, 0, 0, 0.23)', // Указываем начальный цвет
 	outline: 'none',
 	boxSizing: 'border-box',
 	transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
 };
 
 const inputFocusStyle: React.CSSProperties = {
-	borderColor: '#1976d2', // цвет фокуса MUI (синий)
+	borderColor: '#1976d2', // Теперь нет конфликта
 	boxShadow: '0 0 0 2px rgba(25, 118, 210, 0.2)',
 };
 
 export default function NumberInputStyled(props: {
-	value: string | number;
+	value: string | number | undefined;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	error?: boolean;
 	helperText?: string;

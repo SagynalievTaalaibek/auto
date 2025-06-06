@@ -13,15 +13,23 @@ import type { UserRole } from '../types/user.ts';
 export function getNavigationByRole(role: UserRole): Navigation {
 	const baseNavigation: Navigation = [
 		{ kind: 'header', title: 'Основное' },
-		{ segment: 'dashboard', title: 'Рабочий стол', icon: <DashboardIcon /> },
-		{ segment: 'dashboard/inventory', title: 'Склад', icon: <InventoryIcon /> },
 		{
-			segment: 'dashboard/services',
+			segment: 'crm/dashboard',
+			title: 'Рабочий стол',
+			icon: <DashboardIcon />,
+		},
+		{
+			segment: 'crm/dashboard/inventory',
+			title: 'Склад',
+			icon: <InventoryIcon />,
+		},
+		{
+			segment: 'crm/dashboard/services',
 			title: 'Услуги',
 			icon: <AddToPhotosIcon />,
 		},
 		{
-			segment: 'dashboard/orders',
+			segment: 'crm/dashboard/orders',
 			title: 'Заказы',
 			icon: <ShoppingCartIcon />,
 		},
@@ -30,15 +38,23 @@ export function getNavigationByRole(role: UserRole): Navigation {
 	const adminNavigation: Navigation = [
 		{ kind: 'divider' },
 		{ kind: 'header', title: 'Администрирование' },
-		{ segment: 'dashboard/staff', title: 'Персонал', icon: <PersonAddIcon /> },
 		{
-			segment: 'dashboard/analytics',
+			segment: 'crm/dashboard/staff',
+			title: 'Персонал',
+			icon: <PersonAddIcon />,
+		},
+		{
+			segment: 'crm/dashboard/analytics',
 			title: 'Аналитика',
 			icon: <BarChartIcon />,
 		},
-		{ segment: 'dashboard/reports', title: 'Отчет', icon: <BarChartIcon /> },
 		{
-			segment: 'dashboard/settings',
+			segment: 'crm/dashboard/reports',
+			title: 'Отчет',
+			icon: <BarChartIcon />,
+		},
+		{
+			segment: 'crm/dashboard/settings',
 			title: 'Настройка',
 			icon: <SettingsIcon />,
 		},

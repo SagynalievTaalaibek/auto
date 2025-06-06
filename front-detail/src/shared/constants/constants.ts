@@ -12,15 +12,19 @@ export const ROUTES = {
 	CONTACTS: '/contacts',
 
 	// ADMIN
-	DASHBOARD: '/dashboard',
-	ORDER: '/dashboard/orders',
-	STAFF: '/dashboard/staff',
-	SERVICES: '/dashboard/services',
+	DASHBOARD: '/crm/dashboard',
+	DASHBOARD_ORDER: '/crm/dashboard/orders',
+	DASHBOARD_STAFF: '/crm/dashboard/staff',
+	DASHBOARD_SERVICES: '/crm/dashboard/services',
+	DASHBOARD_ANALYTICS: '/crm/dashboard/analytics',
+	DASHBOARD_INVENTORY: '/crm/dashboard/inventory',
+	DASHBOARD_REPORTS: '/crm/dashboard/reports',
+	DASHBOARD_SETTINGS: '/crm/dashboard/settings',
 
-	ORDER_INFO: '/dashboard/orders/info/',
-	ORDER_EDIT: '/dashboard/orders/edit/',
-	ORDER_MY: '/dashboard/orders/my',
-	ORDER_ADD: '/dashboard/orders/add',
+	DASHBOARD_ORDER_INFO: '/crm/dashboard/orders/info',
+	DASHBOARD_ORDER_EDIT: '/crm/dashboard/orders/edit',
+	DASHBOARD_ORDER_MY: '/crm/dashboard/orders/my',
+	DASHBOARD_ORDER_ADD: '/crm/dashboard/orders/add',
 };
 
 export const API_ROUTES = {
@@ -37,6 +41,8 @@ export const API_ROUTES = {
 	ORDER_GET_PROFILE: '/orders?profile=true',
 	ORDER_GET_CRM: '/orders?crm=true',
 	ORDER_GET_ONE: '/orders',
+	ORDER_UPDATE: '/orders',
+	ORDER_UPDATE_STATUS: '/orders/status',
 
 	USERS_GET_CRM: '/users',
 	USERS_GET_MASTERS: '/users/master',
