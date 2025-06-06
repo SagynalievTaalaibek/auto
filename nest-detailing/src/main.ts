@@ -2,8 +2,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { RedisStore } from 'connect-redis';
-import * as cookieParser from 'cookie-parser';
-import * as session from 'express-session';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import IORedis from 'ioredis';
 
 import { AppModule } from './app.module';

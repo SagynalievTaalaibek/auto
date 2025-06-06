@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import {
 	Box,
 	Button,
+	FormControl,
 	MenuItem,
+	Select,
 	Table,
 	TableBody,
 	TableCell,
@@ -16,19 +18,46 @@ import {
 } from '@mui/material';
 
 import { selectOrdersCRM } from '../../../../features/orders/orders.slice.ts';
+import {
+	changeOrderStatus,
+	fetchOrdersCRM,
+} from '../../../../features/orders/orders.thunks.ts';
 import { ROUTES } from '../../../../shared/constants/constants.ts';
-import { useAppSelector } from '../../../../shared/hooks/hooksStore.ts';
+import {
+	useAppDispatch,
+	useAppSelector,
+} from '../../../../shared/hooks/hooksStore.ts';
+import { useAppSnackbar } from '../../../../shared/hooks/useAppSnackbar.tsx';
 
-const statusOptions = ['ALL', 'NEW', 'IN_PROGRESS', 'COMPLETED'];
+const statusOptions = [
+	'ALL',
+	'NEW',
+	'IN_PROGRESS',
+	'COMPLETED',
+	'PAID',
+	'CLOSED',
+	'CANCELLED',
+	'RESCHEDULED',
+];
 
 export function OrdersTableCrm() {
+	const dispatch = useAppDispatch();
 	const router = useNavigate();
+	const { showSnackbar } = useAppSnackbar();
+
 	const orders = useAppSelector(selectOrdersCRM);
 
 	const [statusFilter, setStatusFilter] = useState('ALL');
 	const [emailFilter, setEmailFilter] = useState('');
 	const [nameFilter, setNameFilter] = useState('');
 	const [sortAsc, setSortAsc] = useState(true);
+
+	const handleStatusChange = async (orderId: string, newStatus: string) => {
+		await dispatch(changeOrderStatus({ status: newStatus, id: orderId }));
+
+		showSnackbar('Статус обновлен', 'success');
+		dispatch(fetchOrdersCRM());
+	};
 
 	const filteredOrders = useMemo(() => {
 		let result = [...orders];
@@ -130,9 +159,26 @@ export function OrdersTableCrm() {
 								<TableCell>{order.user.name}</TableCell>
 								<TableCell>{order.user.email}</TableCell>
 								<TableCell>{order.user.phone}</TableCell>
-								<TableCell>{`${order.carBrand} ${order.carModel} ${order.carYear}`}</TableCell>
+								<TableCell>{`${order.modelCar.brand.name} ${order.modelCar.name} ${order.carYear}`}</TableCell>
 								<TableCell>{order.carColor}</TableCell>
-								<TableCell>{order.status}</TableCell>
+								<TableCell>
+									<FormControl fullWidth size="small">
+										<Select
+											value={order.status}
+											onChange={e =>
+												handleStatusChange(order.id, e.target.value)
+											}
+										>
+											{statusOptions
+												.filter(status => status !== 'ALL')
+												.map(status => (
+													<MenuItem key={status} value={status}>
+														{status}
+													</MenuItem>
+												))}
+										</Select>
+									</FormControl>
+								</TableCell>
 								<TableCell>
 									{new Date(order.createdAt).toLocaleString()}
 								</TableCell>

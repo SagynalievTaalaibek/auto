@@ -7,12 +7,14 @@ export const OrderCRMSchema = z.object({
 		.string({ required_error: 'Пользователь обязателен' })
 		.uuid('Некорректный UUID пользователя'),
 
-	carBrand: z
-		.string({ required_error: 'Марка авто обязательна' })
-		.min(1, 'Введите марку авто'),
-	carModel: z
-		.string({ required_error: 'Модель авто обязательна' })
-		.min(1, 'Введите модель авто'),
+	modelCarId: z
+		.string({ required_error: 'Модель машины обязателен' })
+		.uuid('Некорректный UUID Модель машины'),
+
+	bodyTypeId: z
+		.string({ required_error: 'Кузов обязателен' })
+		.uuid('Некорректный UUID Кузова'),
+
 	carYear: z
 		.string({
 			required_error: 'Укажите год выпуска',
@@ -33,16 +35,6 @@ export const OrderCRMSchema = z.object({
 		.string({ required_error: 'Цвет авто обязателен' })
 		.min(1, 'Введите цвет авто'),
 
-	categoryIds: z
-		.array(z.string().uuid('Некорректный ID категории'))
-		.min(1, 'Выберите хотя бы одну категорию'),
-
-	serviceIds: z
-		.array(z.string().uuid('Некорректный ID услуги'))
-		.min(1, 'Выберите хотя бы одну услугу'),
-
-	masterId: z.string().uuid('Некорректный UUID мастера').optional(),
-
 	startTime: z.string({
 		required_error: 'Укажите дату начала',
 		invalid_type_error: 'Некорректная дата начала',
@@ -51,6 +43,10 @@ export const OrderCRMSchema = z.object({
 		required_error: 'Укажите дату окончания',
 		invalid_type_error: 'Некорректная дата окончания',
 	}),
+
+	masterId: z.string().uuid('Некорректный UUID мастера').optional(),
+	photos: z.array(z.string().min(1, 'Путь к фото обязателен')).optional(),
+	notes: z.string().optional(),
 
 	totalPrice: z
 		.string({
@@ -65,9 +61,14 @@ export const OrderCRMSchema = z.object({
 		.refine(val => val >= 1000, {
 			message: 'Цена должен быть не меньше 1000',
 		}),
-	photos: z.array(z.string().min(1, 'Путь к фото обязателен')).optional(),
 
-	notes: z.string().optional(),
+	orderCategoryIds: z
+		.array(z.string().uuid('Некорректный ID категории'))
+		.min(1, 'Выберите хотя бы одну категорию'),
+
+	orderServiceIds: z
+		.array(z.string().uuid('Некорректный ID услуги'))
+		.min(1, 'Выберите хотя бы одну услугу'),
 });
 
 export type TypeOrderCRMSchema = z.infer<typeof OrderCRMSchema>;

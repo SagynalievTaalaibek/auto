@@ -45,6 +45,23 @@ export const DashboardOrdersInfo = () => {
 		);
 	}
 
+	const carCoefficient = order.modelCar.brand.coefficient;
+	const bodyCoefficient = order.bodyType.coefficient;
+
+	const { totalMinPrice, totalMaxPrice } = order.orderServices.reduce(
+		(acc, serv) => {
+			const baseMin = serv.service.basePriceMin ?? 0;
+			const baseMax = serv.service.basePriceMax ?? 0;
+			const multiplier = carCoefficient * bodyCoefficient;
+
+			acc.totalMinPrice += baseMin * multiplier;
+			acc.totalMaxPrice += baseMax * multiplier;
+
+			return acc;
+		},
+		{ totalMinPrice: 0, totalMaxPrice: 0 },
+	);
+
 	const onDeleteOrder = async () => {
 		console.log('Удаление заказа:', order.id);
 		router(ROUTES.DASHBOARD_ORDER);
@@ -83,9 +100,10 @@ export const DashboardOrdersInfo = () => {
 						Автомобиль
 					</Typography>
 					<Typography>
-						{order.carBrand} {order.carModel} ({order.carYear})
+						{order.modelCar.brand.name} {order.modelCar.name} ({order.carYear})
 					</Typography>
 					<Typography>Цвет: {order.carColor}</Typography>
+					<Typography>Кузов: {order.bodyType.name}</Typography>
 				</Box>
 
 				{/* Статус и дата */}
@@ -95,7 +113,7 @@ export const DashboardOrdersInfo = () => {
 					</Typography>
 					<Chip
 						label={order.status}
-						color={order.status === 'NEW' ? 'primary' : 'default'}
+						color={order.status === 'NEW' ? 'primary' : 'secondary'}
 						sx={{ mt: 1 }}
 					/>
 					<Typography sx={{ mt: 2 }}>
@@ -149,6 +167,10 @@ export const DashboardOrdersInfo = () => {
 					</Typography>
 					<Typography>
 						Общая стоимость: {order.totalPrice ?? '—'} сом
+					</Typography>
+					<Typography>
+						Предварительная стоимость с учётом выбранных услуг: от{' '}
+						{Math.round(totalMinPrice)} до {Math.round(totalMaxPrice)} сом
 					</Typography>
 					<Typography>Заметка: {order.notes}</Typography>
 				</Box>

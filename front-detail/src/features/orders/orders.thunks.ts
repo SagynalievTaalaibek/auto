@@ -10,11 +10,12 @@ import type {
 	IOrder,
 	OrderGetCRM,
 	OrderGetProfile,
+	UnifiedOrderSchema,
 } from '../../shared/types/orders.ts';
 import { logout } from '../auth/authSlice.ts';
 
 export const fetchOrderProfile = createAsyncThunk<OrderGetProfile[], undefined>(
-	'dashboard-orders/fetchOrderGetProfile',
+	'orders/fetchOrderGetProfile',
 	async (_, { dispatch }) => {
 		try {
 			const response = await axiosApi.get<OrderGetProfile[]>(
@@ -34,7 +35,7 @@ export const fetchOrderProfile = createAsyncThunk<OrderGetProfile[], undefined>(
 );
 
 export const createOrderClient = createAsyncThunk(
-	'dashboard-orders/createOrderClient',
+	'orders/createOrderClient',
 	async (data: TypeOrderProfileSchema, { rejectWithValue, dispatch }) => {
 		try {
 			const order = await axiosApi.post(API_ROUTES.CREATE_ORDER_CLIENT, {
@@ -85,5 +86,92 @@ export const fetchOneOrderUpdate = createAsyncThunk<TypeOrderCRMSchema, string>(
 			`${API_ROUTES.ORDER_GET_ONE}/${id}?update=true`,
 		);
 		return response.data;
+	},
+);
+
+export const createOrderCRM = createAsyncThunk(
+	'orders/createOrderCRM',
+	async (data: UnifiedOrderSchema, { rejectWithValue, dispatch }) => {
+		try {
+			const order = await axiosApi.post(API_ROUTES.CREATE_ORDER_CRM, {
+				...data,
+				carYear: String(data.carYear),
+			});
+			return order.data;
+		} catch (error: unknown) {
+			const axiosError = error as AxiosError<ErrorResponse>;
+
+			if (axiosError?.response?.status === 401) {
+				dispatch(logout());
+			}
+
+			return rejectWithValue(
+				axiosError.response?.data?.message || 'CREATE ORDER FAILED',
+			);
+		}
+	},
+);
+
+interface ChangeOrderStatusProps {
+	status: string;
+	id: string;
+}
+
+export const changeOrderStatus = createAsyncThunk<
+	undefined,
+	ChangeOrderStatusProps
+>(
+	'orders/changeOrderStatus',
+	async ({ status, id }, { rejectWithValue, dispatch }) => {
+		try {
+			const response = await axiosApi.patch(
+				`${API_ROUTES.ORDER_UPDATE_STATUS}/${id}`,
+				{
+					status,
+				},
+			);
+			return response.data;
+		} catch (error: unknown) {
+			const axiosError = error as AxiosError<ErrorResponse>;
+
+			if (axiosError?.response?.status === 401) {
+				dispatch(logout());
+			}
+
+			return rejectWithValue(
+				axiosError.response?.data?.message || 'UPDATE STATUS ORDER FAILED',
+			);
+		}
+	},
+);
+
+interface UpdateOrderProps {
+	data: UnifiedOrderSchema;
+	id: string;
+}
+
+export const updateOrder = createAsyncThunk<undefined, UpdateOrderProps>(
+	'orders/updateOrder',
+	async ({ data, id }, { rejectWithValue, dispatch }) => {
+		try {
+			const response = await axiosApi.patch(
+				`${API_ROUTES.ORDER_UPDATE}/${id}`,
+				{
+					...data,
+					carYear: String(data.carYear),
+				},
+			);
+			return response.data;
+		} catch (error: unknown) {
+			const axiosError = error as AxiosError<ErrorResponse>;
+
+			if (axiosError?.response?.status === 401) {
+				dispatch(logout());
+			}
+
+			return rejectWithValue(
+				axiosError.response?.data?.message || 'UPDATE ORDER FAILED',
+			);
+		}
 	},
 );

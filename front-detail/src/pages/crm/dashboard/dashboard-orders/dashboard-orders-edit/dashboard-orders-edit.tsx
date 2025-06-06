@@ -5,6 +5,7 @@ import { Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { UnifiedOrderForm } from '../../../../../components/commons/order/unified-order-form.tsx';
 import DashboardBreadcrumbs from '../../../../../components/ui/dashboard-breadcrumbs.tsx';
 import { LoadingScreen } from '../../../../../components/ui/loading-screen/loading-screen.tsx';
 import { selectOrdersLoading } from '../../../../../features/orders/orders.slice.ts';
@@ -41,7 +42,11 @@ export const DashboardOrdersEdit = () => {
 					Редактирование заказа
 				</Typography>
 
-				{loadingOrder ? <LoadingScreen /> : 'ORDER FORM'}
+				{loadingOrder ? (
+					<LoadingScreen />
+				) : (
+					<UnifiedOrderForm mode={'crm'} orderId={orderId} />
+				)}
 			</Box>
 		</Box>
 	);

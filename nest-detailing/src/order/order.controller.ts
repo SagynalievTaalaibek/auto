@@ -5,6 +5,7 @@ import {
 	HttpCode,
 	HttpStatus,
 	Param,
+	Patch,
 	Post,
 	Query
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { Authorization } from '@/auth/decorators/auth.decorator';
 import { Authorized } from '@/auth/decorators/authorized.decorator';
 import { CreateOrderClientDto } from '@/order/dto/create-order-client.dto';
 import { CreateOrderCRMDto } from '@/order/dto/create-order-crm.dto';
+import { UpdateOrderStatusDto } from '@/order/dto/update-order-status.dto';
 
 import { OrderService } from './order.service';
 
@@ -37,16 +39,25 @@ export class OrderController {
 		return this.orderService.createOrderClient(dto, userId);
 	}
 
-	/*@Authorization()
+	@Authorization()
+	@HttpCode(HttpStatus.OK)
+	@Patch('status/:id')
+	public async updateOrderStatus(
+		@Param('id') id: string,
+		@Body() dto: UpdateOrderStatusDto
+	) {
+		return this.orderService.updateOrderStatus(id, dto);
+	}
+
+	@Authorization()
 	@HttpCode(HttpStatus.OK)
 	@Patch(':id')
 	public async updateOrder(
-		@Authorized('id') userId: string,
 		@Param('id') id: string,
-		@Body() dto: CreateOrderClientDto
+		@Body() dto: CreateOrderCRMDto
 	) {
-		return this.orderService.updateOrder(id, dto, userId);
-	}*/
+		return this.orderService.updateOrder(id, dto);
+	}
 
 	@Authorization()
 	@HttpCode(HttpStatus.OK)

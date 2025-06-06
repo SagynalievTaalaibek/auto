@@ -2,6 +2,7 @@ import { Divider } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { UnifiedOrderForm } from '../../../../../components/commons/order/unified-order-form.tsx';
 import DashboardBreadcrumbs from '../../../../../components/ui/dashboard-breadcrumbs.tsx';
 import { ROUTES } from '../../../../../shared/constants/constants.ts';
 
@@ -21,7 +22,7 @@ export const DashboardOrdersAdd = () => {
 					Создание заказа
 				</Typography>
 
-				{/*<OrderForm />*/}
+				<UnifiedOrderForm mode={'crm'} />
 			</Box>
 		</Box>
 	);

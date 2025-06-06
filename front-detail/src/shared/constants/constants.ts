@@ -41,6 +41,8 @@ export const API_ROUTES = {
 	ORDER_GET_PROFILE: '/orders?profile=true',
 	ORDER_GET_CRM: '/orders?crm=true',
 	ORDER_GET_ONE: '/orders',
+	ORDER_UPDATE: '/orders',
+	ORDER_UPDATE_STATUS: '/orders/status',
 
 	USERS_GET_CRM: '/users',
 	USERS_GET_MASTERS: '/users/master',
