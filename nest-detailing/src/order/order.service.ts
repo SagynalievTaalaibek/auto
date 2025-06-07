@@ -185,6 +185,39 @@ export class OrderService {
 			});
 		}
 
+		if (filters.masterId) {
+			return this.prismaService.order.findMany({
+				where: {
+					masterId: filters.masterId
+				},
+				select: {
+					id: true,
+					modelCar: {
+						select: {
+							name: true,
+							brand: {
+								select: {
+									name: true
+								}
+							}
+						}
+					},
+					carYear: true,
+					carColor: true,
+					createdAt: true,
+					status: true,
+					user: {
+						select: {
+							name: true,
+							email: true,
+							phone: true
+						}
+					}
+				},
+				orderBy: { createdAt: 'desc' }
+			});
+		}
+
 		return this.prismaService.order.findMany({
 			include: {
 				user: {

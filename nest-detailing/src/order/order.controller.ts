@@ -16,13 +16,15 @@ import { CreateOrderClientDto } from '@/order/dto/create-order-client.dto';
 import { CreateOrderCRMDto } from '@/order/dto/create-order-crm.dto';
 import { UpdateOrderStatusDto } from '@/order/dto/update-order-status.dto';
 
+import { UserRole } from '../../generated/prisma';
+
 import { OrderService } from './order.service';
 
 @Controller('orders')
 export class OrderController {
 	constructor(private readonly orderService: OrderService) {}
 
-	@Authorization()
+	@Authorization(UserRole.ADMIN)
 	@HttpCode(HttpStatus.OK)
 	@Post('crm')
 	async createOrderCRM(@Body() dto: CreateOrderCRMDto) {
@@ -39,7 +41,7 @@ export class OrderController {
 		return this.orderService.createOrderClient(dto, userId);
 	}
 
-	@Authorization()
+	@Authorization(UserRole.ADMIN, UserRole.MASTER)
 	@HttpCode(HttpStatus.OK)
 	@Patch('status/:id')
 	public async updateOrderStatus(
@@ -49,7 +51,7 @@ export class OrderController {
 		return this.orderService.updateOrderStatus(id, dto);
 	}
 
-	@Authorization()
+	@Authorization(UserRole.ADMIN)
 	@HttpCode(HttpStatus.OK)
 	@Patch(':id')
 	public async updateOrder(
@@ -68,6 +70,7 @@ export class OrderController {
 		query: {
 			profile: boolean;
 			crm: boolean;
+			masterId?: string;
 		}
 	) {
 		if (query.profile) {
@@ -76,6 +79,10 @@ export class OrderController {
 
 		if (query.crm) {
 			return this.orderService.findAll({ crm: query.crm }, userId);
+		}
+
+		if (query.masterId) {
+			return this.orderService.findAll({ masterId: query.masterId }, userId);
 		}
 
 		return this.orderService.findAll({}, userId);

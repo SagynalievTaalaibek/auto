@@ -40,6 +40,7 @@ export const API_ROUTES = {
 	CREATE_ORDER_CLIENT: '/orders/client',
 	ORDER_GET_PROFILE: '/orders?profile=true',
 	ORDER_GET_CRM: '/orders?crm=true',
+	ORDER_GET_CRM_MASTER: '/orders?masterId=',
 	ORDER_GET_ONE: '/orders',
 	ORDER_UPDATE: '/orders',
 	ORDER_UPDATE_STATUS: '/orders/status',
@@ -54,6 +55,12 @@ export const API_ROUTES = {
 
 	CARS_GET: '/cars',
 	CARS_BODY_TYPE_GET: '/cars/body-type',
+
+	ANALYTICS_GET_PERIOD: '/analytics/period-stats?period=',
+	ANALYTICS_GET_RANGE: '/analytics/revenue-chart?range=',
+	ANALYTICS_GET_POPULAR_SERVICE: '/analytics/popular-services',
+	ANALYTICS_GET_DASHBOARD_STATS: '/analytics/dashboard-stats',
+	ANALYTICS_GET_DASHBOARD_ACTIVE: '/analytics/dashboard-active',
 };
 
 export const NAVBAR_URL = [
