@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
@@ -15,22 +15,16 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { FormQuestion } from '../../../components/client/form-question/form-question.tsx';
-
-const CONTACTS = {
-	title: 'Контакты детейлинг-центра',
-	sub_title: 'Всегда на связи — заботимся о вашем авто',
-	address: 'Бишкек, ул. Тоголок Молдо 25',
-	phone: '+996 700 123 456',
-	email: 'contact@detailing.kg',
-	working_hours: 'Пн–Сб: 9:00 – 20:00 / Вс: выходной',
-	items: [
-		{ platform: 'telegram', url: 'https://t.me/thetechkz' },
-		{ platform: 'whatsapp', url: 'https://web.whatsapp.com/' },
-		{ platform: 'instagram', url: 'https://www.instagram.com/' },
-	],
-	map_url:
-		'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2925.320321368569!2d74.58490727654616!3d42.84496910432818!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x389ec9dbdc3d4eef%3A0x6a75a5244d9c79f8!2z0JrQk9Ci0KMg0LjQvC4g0JguINCg0LDQt9C30LDQutC-0LLQsA!5e0!3m2!1sru!2skg!4v1748156728783!5m2!1sru!2skg',
-};
+import { LoadingScreen } from '../../../components/ui/loading-screen/loading-screen.tsx';
+import {
+	selectContactsInfo,
+	selectLoadingSettings,
+} from '../../../features/settings/settings.slice.ts';
+import { fetchContactInfo } from '../../../features/settings/settings.thunks.ts';
+import {
+	useAppDispatch,
+	useAppSelector,
+} from '../../../shared/hooks/hooksStore.ts';
 
 const iconMap = {
 	telegram: Telegram,
@@ -39,7 +33,25 @@ const iconMap = {
 };
 
 export const Contacts = () => {
+	const dispatch = useAppDispatch();
+	const contacts = useAppSelector(selectContactsInfo);
+	const loading = useAppSelector(selectLoadingSettings);
+
 	const [open, setOpen] = useState(false);
+
+	const socialItems = [
+		{ platform: 'telegram', url: contacts?.telegramUrl },
+		{ platform: 'whatsapp', url: contacts?.whatsappUrl },
+		{ platform: 'instagram', url: contacts?.instagramUrl },
+	].filter(item => !!item.url);
+
+	useEffect(() => {
+		dispatch(fetchContactInfo());
+	}, [dispatch]);
+
+	if (loading) {
+		return <LoadingScreen />;
+	}
 
 	return (
 		<Box
@@ -56,13 +68,13 @@ export const Contacts = () => {
 					component="h1"
 					gutterBottom
 					sx={{
-						color: '#FFD700', // Золотой
+						color: '#FFD700',
 						fontWeight: 'bold',
 						mb: 2,
 						mt: 4,
 					}}
 				>
-					{CONTACTS.title}
+					{contacts?.title ?? 'Контакты'}
 				</Typography>
 
 				<Divider
@@ -75,7 +87,7 @@ export const Contacts = () => {
 				/>
 
 				<Typography variant="h6" sx={{ mb: 5 }}>
-					{CONTACTS.sub_title}
+					{contacts?.subTitle ?? ''}
 				</Typography>
 
 				<Button
@@ -111,39 +123,47 @@ export const Contacts = () => {
 						}}
 					>
 						<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-							<Box sx={{ display: 'flex', alignItems: 'center' }}>
-								<LocationOn sx={{ color: '#FFD700' }} />
-								<Typography ml={1}>{CONTACTS.address}</Typography>
-							</Box>
+							{contacts?.address && (
+								<Box sx={{ display: 'flex', alignItems: 'center' }}>
+									<LocationOn sx={{ color: '#FFD700' }} />
+									<Typography ml={1}>{contacts.address}</Typography>
+								</Box>
+							)}
 
-							<Box sx={{ display: 'flex', alignItems: 'center' }}>
-								<Phone sx={{ color: '#FFD700' }} />
-								<Typography
-									ml={1}
-									component={Link}
-									to={`tel:${CONTACTS.phone}`}
-									sx={{ color: '#fff', textDecoration: 'none' }}
-								>
-									{CONTACTS.phone}
-								</Typography>
-							</Box>
+							{contacts?.phone && (
+								<Box sx={{ display: 'flex', alignItems: 'center' }}>
+									<Phone sx={{ color: '#FFD700' }} />
+									<Typography
+										ml={1}
+										component={Link}
+										to={`tel:${contacts.phone}`}
+										sx={{ color: '#fff', textDecoration: 'none' }}
+									>
+										{contacts.phone}
+									</Typography>
+								</Box>
+							)}
 
-							<Box sx={{ display: 'flex', alignItems: 'center' }}>
-								<Email sx={{ color: '#FFD700' }} />
-								<Typography
-									ml={1}
-									component={Link}
-									to={`mailto:${CONTACTS.email}`}
-									sx={{ color: '#fff', textDecoration: 'none' }}
-								>
-									{CONTACTS.email}
-								</Typography>
-							</Box>
+							{contacts?.email && (
+								<Box sx={{ display: 'flex', alignItems: 'center' }}>
+									<Email sx={{ color: '#FFD700' }} />
+									<Typography
+										ml={1}
+										component={Link}
+										to={`mailto:${contacts.email}`}
+										sx={{ color: '#fff', textDecoration: 'none' }}
+									>
+										{contacts.email}
+									</Typography>
+								</Box>
+							)}
 
-							<Box sx={{ display: 'flex', alignItems: 'center' }}>
-								<AccessTime sx={{ color: '#FFD700' }} />
-								<Typography>{CONTACTS.working_hours}</Typography>
-							</Box>
+							{contacts?.workingHours && (
+								<Box sx={{ display: 'flex', alignItems: 'center' }}>
+									<AccessTime sx={{ color: '#FFD700' }} />
+									<Typography ml={1}>{contacts.workingHours}</Typography>
+								</Box>
+							)}
 						</Box>
 
 						<Box
@@ -167,6 +187,7 @@ export const Contacts = () => {
 					</Box>
 				</Box>
 
+				{/* Соцсети */}
 				<Box
 					sx={{
 						mt: 5,
@@ -176,12 +197,12 @@ export const Contacts = () => {
 						justifyContent: { xs: 'flex-start', md: 'center' },
 					}}
 				>
-					{CONTACTS.items.map((item, idx) => {
+					{socialItems.map((item, idx) => {
 						const Icon = iconMap[item.platform as keyof typeof iconMap];
 						return (
 							<Link
 								key={`${idx}-social`}
-								to={item.url}
+								to={item.url!}
 								target="_blank"
 								rel="noopener noreferrer"
 							>
@@ -209,16 +230,19 @@ export const Contacts = () => {
 					})}
 				</Box>
 
-				<Box sx={{ my: 5 }}>
-					<Box
-						component="iframe"
-						src={CONTACTS.map_url as string}
-						width="100%"
-						height={450}
-						sx={{ border: 0 }}
-						loading="lazy"
-					/>
-				</Box>
+				{/* Карта */}
+				{contacts?.mapUrl && (
+					<Box sx={{ my: 5 }}>
+						<Box
+							component="iframe"
+							src={contacts.mapUrl}
+							width="100%"
+							height={450}
+							sx={{ border: 0 }}
+							loading="lazy"
+						/>
+					</Box>
+				)}
 			</Box>
 
 			<FormQuestion open={open} setOpen={setOpen} />

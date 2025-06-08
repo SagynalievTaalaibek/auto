@@ -23,6 +23,15 @@ interface Props {
 	onCloseModalAction: () => void;
 }
 
+const specializations = [
+	{ id: '123', specialist: 'Мастер по тонированию' },
+	{ id: '321', specialist: 'Мастер по полировке и химчистке авто' },
+	{ id: '222', specialist: 'Мастер по оклейке' },
+	{ id: '444', specialist: 'Мастер по ремонту салона' },
+	{ id: 'Кузовной_ремонт', specialist: 'Кузовщик' },
+	{ id: 'Все услуги', specialist: 'Детейлер-универсал' },
+];
+
 export function AddUserModal({ open, onCloseModalAction }: Props) {
 	const [email, setEmail] = useState('');
 	const [role, setRole] = useState<UserRole>('REGULAR');
@@ -70,12 +79,19 @@ export function AddUserModal({ open, onCloseModalAction }: Props) {
 
 				{role === 'MASTER' && (
 					<TextField
+						select
 						fullWidth
 						label="Специализация"
 						value={specialization}
 						onChange={e => setSpecialization(e.target.value)}
 						sx={{ mt: 2 }}
-					/>
+					>
+						{specializations.map(spec => (
+							<MenuItem key={spec.id} value={spec.specialist}>
+								{spec.specialist}
+							</MenuItem>
+						))}
+					</TextField>
 				)}
 			</DialogContent>
 			<DialogActions>

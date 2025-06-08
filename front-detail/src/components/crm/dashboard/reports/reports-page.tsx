@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRef } from 'react';
 
 import {
 	Box,
@@ -14,21 +15,61 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
+import html2pdf from 'html2pdf.js';
+
+import { fetchReport } from '../../../../features/reports/reports.thunks.ts';
+import { useAppDispatch } from '../../../../shared/hooks/hooksStore.ts';
+
+import { ReportFinanceTable } from './report-finance-table.tsx';
+import { ReportInventoryTable } from './report-inventory-table.tsx';
+import { ReportOrdersTable } from './report-orders-table.tsx';
+import { ReportStaffTable } from './report-staff-table.tsx';
 
 export function ReportsPage() {
+	const reportRef = useRef<HTMLDivElement>(null);
+
+	const dispatch = useAppDispatch();
 	const [startDate, setStartDate] = useState<Dayjs | null>(
 		dayjs().startOf('month'),
 	);
 	const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
 	const [reportType, setReportType] = useState('orders');
+	const [showTable, setShowTable] = useState(false);
 
-	const handleExport = (format: 'pdf' | 'excel') => {
-		console.log('Export:', {
-			reportType,
-			startDate: startDate?.format('YYYY-MM-DD'),
-			endDate: endDate?.format('YYYY-MM-DD'),
-			format,
-		});
+	const handleShow = async () => {
+		await dispatch(fetchReport({ reportType, startDate, endDate }));
+		setShowTable(true);
+	};
+
+	const handleExport = () => {
+		const input = reportRef.current;
+		if (!input) return;
+
+		const opt = {
+			margin: 5,
+			filename: `report-${reportType}-${startDate?.format('YYYYMMDD')}-${endDate?.format('YYYYMMDD')}.pdf`,
+			image: { type: 'jpeg', quality: 0.98 },
+			html2canvas: { scale: 2, useCORS: true },
+			jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+			pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+		};
+
+		html2pdf().set(opt).from(input).save();
+	};
+
+	const renderReportTable = () => {
+		switch (reportType) {
+			case 'orders':
+				return <ReportOrdersTable />;
+			case 'finance':
+				return <ReportFinanceTable />;
+			case 'warehouse':
+				return <ReportInventoryTable />;
+			case 'staff':
+				return <ReportStaffTable />;
+			default:
+				return null;
+		}
 	};
 
 	return (
@@ -45,7 +86,10 @@ export function ReportsPage() {
 							labelId="report-type-label"
 							value={reportType}
 							label="Тип отчета"
-							onChange={e => setReportType(e.target.value)}
+							onChange={e => {
+								setReportType(e.target.value);
+								setShowTable(false); // сброс отображения таблицы при смене типа
+							}}
 						>
 							<MenuItem value="orders">Заказы</MenuItem>
 							<MenuItem value="finance">Финансы</MenuItem>
@@ -70,23 +114,34 @@ export function ReportsPage() {
 					</LocalizationProvider>
 
 					<Box sx={{ display: 'flex', gap: 2 }}>
-						<Button
-							variant="contained"
-							color="primary"
-							onClick={() => handleExport('excel')}
-						>
-							📥 Экспорт в Excel
+						<Button variant="contained" color="primary" onClick={handleShow}>
+							🔍 Показать
 						</Button>
-						<Button
-							variant="contained"
-							color="secondary"
-							onClick={() => handleExport('pdf')}
-						>
-							📄 Экспорт в PDF
-						</Button>
+
+						{showTable && (
+							<Button
+								variant="contained"
+								color="secondary"
+								onClick={handleExport}
+							>
+								📄 Экспорт в PDF
+							</Button>
+						)}
 					</Box>
 				</Box>
 			</Paper>
+
+			{showTable && (
+				<div ref={reportRef}>
+					<Paper sx={{ p: 3, mb: 4 }}>
+						<Typography variant="h6" mb={2}>
+							📊 Отчет: {startDate?.format('YYYY-MM-DD')} -{' '}
+							{endDate?.format('YYYY-MM-DD')}
+						</Typography>
+						{renderReportTable()}
+					</Paper>
+				</div>
+			)}
 
 			<Paper sx={{ p: 3 }}>
 				<Typography variant="h6" mb={2}>
@@ -103,7 +158,7 @@ export function ReportsPage() {
 						<strong>Склад</strong>: движение материалов (поступление, списание).
 					</li>
 					<li>
-						<strong>Персонал</strong>: рабочие часы и загрузка мастеров.
+						<strong>Пользователи</strong>: Количество пользователей.
 					</li>
 				</ul>
 			</Paper>

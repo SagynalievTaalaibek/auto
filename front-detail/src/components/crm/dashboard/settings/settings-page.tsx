@@ -1,35 +1,110 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Edit as EditIcon, Email, Phone } from '@mui/icons-material';
+import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { z } from 'zod';
+
+import { selectContactsInfo } from '../../../../features/settings/settings.slice.ts';
 import {
-	Box,
-	Button,
-	FormControlLabel,
-	Paper,
-	Stack,
-	Switch,
-	TextField,
-	Typography,
-} from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+	fetchContactInfo,
+	updateContactInfo,
+} from '../../../../features/settings/settings.thunks.ts';
+import {
+	useAppDispatch,
+	useAppSelector,
+} from '../../../../shared/hooks/hooksStore.ts';
+import { useAppSnackbar } from '../../../../shared/hooks/useAppSnackbar.tsx';
+
+type ContactInfoFromApi = {
+	title?: string;
+	subTitle?: string;
+	address?: string;
+	phone?: string;
+	email?: string;
+	workingHours?: string;
+	telegramUrl?: string;
+	whatsappUrl?: string;
+	instagramUrl?: string;
+	mapUrl?: string;
+};
+
+const formSchema = z.object({
+	title: z.string().min(1, 'Обязательное поле'),
+	subTitle: z.string().min(1, 'Обязательное поле'),
+	address: z.string().min(1, 'Обязательное поле'),
+	phone: z.string().min(1, 'Обязательное поле'),
+	email: z.string().min(1, 'Обязательное поле'),
+	workingHours: z.string().min(1, 'Обязательное поле'),
+	telegramUrl: z.string().min(1, 'Обязательное поле'),
+	whatsappUrl: z.string().min(1, 'Обязательное поле'),
+	instagramUrl: z.string().min(1, 'Обязательное поле'),
+	mapUrl: z.string().min(1, 'Обязательное поле'),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 export function SettingsPage() {
-	const [centerName, setCenterName] = useState('Детейлинг Центр');
-	const [logoUrl, setLogoUrl] = useState('');
-	const [workingHours, setWorkingHours] = useState('9:00 - 18:00');
-	const [notificationEmail, setNotificationEmail] =
-		useState('notify@example.com');
-	const [notificationTelegram, setNotificationTelegram] = useState(false);
+	const dispatch = useAppDispatch();
+	const contacts = useAppSelector(selectContactsInfo) as ContactInfoFromApi;
+	const { showSnackbar } = useAppSnackbar();
+	const [formData, setFormData] = useState<FormData>({
+		title: '',
+		subTitle: '',
+		address: '',
+		phone: '',
+		email: '',
+		workingHours: '',
+		telegramUrl: '',
+		whatsappUrl: '',
+		instagramUrl: '',
+		mapUrl: '',
+	});
 
-	const handleSave = () => {
-		// Здесь логика сохранения настроек, пока просто лог
-		console.log({
-			centerName,
-			logoUrl,
-			workingHours,
-			notificationEmail,
-			notificationTelegram,
-		});
+	const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
+		{},
+	);
+
+	useEffect(() => {
+		dispatch(fetchContactInfo());
+	}, [dispatch]);
+
+	useEffect(() => {
+		if (contacts) {
+			setFormData({
+				title: contacts.title || '',
+				subTitle: contacts.subTitle || '',
+				address: contacts.address || '',
+				phone: contacts.phone || '',
+				email: contacts.email || '',
+				workingHours: contacts.workingHours || '',
+				telegramUrl: contacts.telegramUrl || '',
+				whatsappUrl: contacts.whatsappUrl || '',
+				instagramUrl: contacts.instagramUrl || '',
+				mapUrl: contacts.mapUrl || '',
+			});
+		}
+	}, [contacts]);
+
+	const handleChange = (key: keyof FormData, value: string) => {
+		setFormData(prev => ({ ...prev, [key]: value }));
+		setErrors(prev => ({ ...prev, [key]: '' }));
+	};
+
+	const handleSave = async () => {
+		const result = formSchema.safeParse(formData);
+
+		if (!result.success) {
+			const fieldErrors: Partial<Record<keyof FormData, string>> = {};
+			for (const err of result.error.errors) {
+				const fieldName = err.path[0] as keyof FormData;
+				fieldErrors[fieldName] = err.message;
+			}
+			setErrors(fieldErrors);
+			return;
+		}
+
+		await dispatch(updateContactInfo(result.data));
+		showSnackbar('Контакты обновлены', 'success');
+		dispatch(fetchContactInfo());
 	};
 
 	return (
@@ -39,71 +114,19 @@ export function SettingsPage() {
 					Информация о центре
 				</Typography>
 				<Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-					<TextField
-						label="Название центра"
-						value={centerName}
-						onChange={e => setCenterName(e.target.value)}
-						fullWidth
-					/>
-					<TextField
-						label="URL логотипа"
-						value={logoUrl}
-						onChange={e => setLogoUrl(e.target.value)}
-						placeholder="https://example.com/logo.png"
-						fullWidth
-					/>
-					<TextField
-						label="Часы работы"
-						value={workingHours}
-						onChange={e => setWorkingHours(e.target.value)}
-						helperText="Например: 9:00 - 18:00"
-						fullWidth
-					/>
-				</Box>
-			</Paper>
-
-			<Paper sx={{ p: 3, mb: 4 }}>
-				<Typography variant="h6" mb={2}>
-					Мои данные
-				</Typography>
-				<Stack spacing={1}>
-					<Stack direction="row" alignItems="center" spacing={1}>
-						<Phone fontSize="small" />
-						<Typography>+996505601100</Typography>
-						<IconButton size="small">
-							<EditIcon fontSize="small" />
-						</IconButton>
-					</Stack>
-					<Stack direction="row" alignItems="center" spacing={1}>
-						<Email fontSize="small" />
-						<Typography>sagynalievv.t@gmail.com</Typography>
-						<IconButton size="small">
-							<EditIcon fontSize="small" />
-						</IconButton>
-					</Stack>
-				</Stack>
-			</Paper>
-
-			<Paper sx={{ p: 3, mb: 4 }}>
-				<Typography variant="h6" mb={2}>
-					Настройки уведомлений
-				</Typography>
-				<Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-					<TextField
-						label="Email для уведомлений"
-						value={notificationEmail}
-						onChange={e => setNotificationEmail(e.target.value)}
-						fullWidth
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={notificationTelegram}
-								onChange={e => setNotificationTelegram(e.target.checked)}
-							/>
-						}
-						label="Telegram-уведомления"
-					/>
+					{Object.entries(formData).map(([key, value]) => (
+						<TextField
+							key={key}
+							label={getFieldLabel(key as keyof FormData)}
+							value={value}
+							onChange={e =>
+								handleChange(key as keyof FormData, e.target.value)
+							}
+							error={Boolean(errors[key as keyof FormData])}
+							helperText={errors[key as keyof FormData]}
+							fullWidth
+						/>
+					))}
 				</Box>
 			</Paper>
 
@@ -114,4 +137,20 @@ export function SettingsPage() {
 			</Box>
 		</Box>
 	);
+}
+
+function getFieldLabel(field: keyof FormData): string {
+	const labels: Record<keyof FormData, string> = {
+		title: 'Название центра',
+		subTitle: 'Подзаголовок',
+		address: 'Адрес',
+		phone: 'Телефон',
+		email: 'Email',
+		workingHours: 'Часы работы',
+		telegramUrl: 'Telegram URL',
+		whatsappUrl: 'WhatsApp URL',
+		instagramUrl: 'Instagram URL',
+		mapUrl: 'Карта (mapUrl)',
+	};
+	return labels[field];
 }

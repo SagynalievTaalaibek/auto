@@ -175,6 +175,41 @@ model OrderService {
   @@map("order_services")
 }
 
+model Inventory {
+  id            String @id @default(uuid())
+  name          String
+  quantity      Int
+  category      String
+  minStockLevel Int    @map("min_stock_level")
+  purchasePrice Float? @map("purchase_price")
+  totalCost     Float? @map("total_cost")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([name, category])
+  @@map("inventory")
+}
+
+model ContactInfo {
+  id           String  @id @default(uuid())
+  title        String
+  subTitle     String  @map("sub_title")
+  address      String
+  phone        String
+  email        String
+  workingHours String  @map("working_hours")
+  telegramUrl  String?
+  whatsappUrl  String?
+  instagramUrl String?
+  mapUrl       String  @map("map_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("contact_info")
+}
+
 // Перечисление статусов заказа
 enum OrderStatus {
   NEW

@@ -18,6 +18,7 @@ import { inventoryReducer } from '../../features/inventory/inventory.slice.ts';
 import { ordersReducer } from '../../features/orders/orders.slice.ts';
 import { reportsReducer } from '../../features/reports/reports.slice.ts';
 import { serviceReducer } from '../../features/services/services.slice.ts';
+import { settingsReducer } from '../../features/settings/settings.slice.ts';
 
 const usersPersistConfig = {
 	key: 'auto-detailing:users',
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
 	reports: reportsReducer,
 	inventory: inventoryReducer,
 	analytics: analyticsReducer,
+	settings: settingsReducer,
 });
 
 export const store = configureStore({
