@@ -61,9 +61,11 @@ export const createOrderClient = createAsyncThunk(
 
 export const fetchOrdersCRM = createAsyncThunk(
 	'orders/fetchOrdersCRM',
-	async () => {
+	async (masterId?: string) => {
 		const response = await axiosApi.get<OrderGetCRM[]>(
-			API_ROUTES.ORDER_GET_CRM,
+			masterId
+				? `${API_ROUTES.ORDER_GET_CRM_MASTER}${masterId}`
+				: API_ROUTES.ORDER_GET_CRM,
 		);
 		return response.data;
 	},

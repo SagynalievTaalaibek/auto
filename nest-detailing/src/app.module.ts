@@ -13,6 +13,7 @@ import { UserModule } from './user/user.module';
 import { OrderModule } from './order/order.module';
 import { ServiceModule } from './service/service.module';
 import { CarsModule } from './cars/cars.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
 	imports: [
@@ -29,7 +30,8 @@ import { CarsModule } from './cars/cars.module';
 		TwoFactorAuthModule,
 		OrderModule,
 		ServiceModule,
-		CarsModule
+		CarsModule,
+		AnalyticsModule
 	]
 })
 export class AppModule {}

@@ -18,6 +18,10 @@ import { DashboardOrdersInfo } from '../../pages/crm/dashboard/dashboard-orders/
 import { DashboardOrdersMy } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-my/dashboard-orders-my.tsx';
 import { DashboardOrders } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders.tsx';
 import { DashboardReports } from '../../pages/crm/dashboard/dashboard-reports/dashboard-reports.tsx';
+import { DashboardServicesAdd } from '../../pages/crm/dashboard/dashboard-services/dashboard-services-add/dashboard-services-add.tsx';
+import { DashboardServicesInfo } from '../../pages/crm/dashboard/dashboard-services/dashboard-services-info/dashboard-services-info.tsx';
+import { DashboardServicesMainEdit } from '../../pages/crm/dashboard/dashboard-services/dashboard-services-main-edit/dashboard-services-main-edit.tsx';
+import { DashboardServicesSubEdit } from '../../pages/crm/dashboard/dashboard-services/dashboard-services-sub-edit/dashboard-services-sub-edit.tsx';
 import { DashboardServices } from '../../pages/crm/dashboard/dashboard-services/dashboard-services.tsx';
 import { DashboardSettings } from '../../pages/crm/dashboard/dashboard-settings/dashboard-settings.tsx';
 import { DashboardStaff } from '../../pages/crm/dashboard/dashboard-staff/dashboard-staff.tsx';
@@ -91,6 +95,39 @@ export const router = createBrowserRouter([
 							</ProtectedRoute>
 						),
 					},
+					{
+						path: `${ROUTES.DASHBOARD_SERVICES_INFO}/:id`,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardServicesInfo />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_SERVICES_ADD,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardServicesAdd />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: `${ROUTES.DASHBOARD_SERVICES_MAIN_EDIT}/:id`,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardServicesMainEdit />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: `${ROUTES.DASHBOARD_SERVICES_SUB_EDIT}/:id`,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<DashboardServicesSubEdit />
+							</ProtectedRoute>
+						),
+					},
+
 					{
 						path: ROUTES.DASHBOARD_INVENTORY,
 						element: (

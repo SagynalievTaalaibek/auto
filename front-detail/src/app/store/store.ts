@@ -11,6 +11,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+import { analyticsReducer } from '../../features/analytics/analytics.slice.ts';
 import { authReducer } from '../../features/auth/authSlice.ts';
 import { carsReducer } from '../../features/cars/cars.slice.ts';
 import { inventoryReducer } from '../../features/inventory/inventory.slice.ts';
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
 	cars: carsReducer,
 	reports: reportsReducer,
 	inventory: inventoryReducer,
+	analytics: analyticsReducer,
 });
 
 export const store = configureStore({

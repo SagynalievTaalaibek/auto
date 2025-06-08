@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { SettingsPage } from '../../../../components/crm/dashboard/services/settings-page.tsx';
+import { SettingsPage } from '../../../../components/crm/dashboard/settings/settings-page.tsx';
 import { LoadingScreen } from '../../../../components/ui/loading-screen/loading-screen.tsx';
 
 export const DashboardSettings = () => {

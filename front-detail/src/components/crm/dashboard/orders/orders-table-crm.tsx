@@ -1,22 +1,21 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import EditIcon from '@mui/icons-material/Edit';
+import InfoIcon from '@mui/icons-material/Info';
 import {
 	Box,
-	Button,
 	FormControl,
+	InputLabel,
 	MenuItem,
 	Select,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
 	TextField,
-	Tooltip,
 } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 
+import { selectUser } from '../../../../features/auth/authSlice.ts';
 import { selectOrdersCRM } from '../../../../features/orders/orders.slice.ts';
 import {
 	changeOrderStatus,
@@ -38,54 +37,143 @@ const statusOptions = [
 	'CLOSED',
 	'CANCELLED',
 	'RESCHEDULED',
+	'CONFIRMED',
 ];
+
+type OrderRow = {
+	id: string;
+	user: {
+		name: string;
+		email: string;
+		phone: string;
+	};
+	modelCar: {
+		name: string;
+		brand: {
+			name: string;
+		};
+	};
+	carYear: string;
+	carColor: string;
+	status: string;
+	createdAt: string;
+};
 
 export function OrdersTableCrm() {
 	const dispatch = useAppDispatch();
 	const router = useNavigate();
 	const { showSnackbar } = useAppSnackbar();
+	const user = useAppSelector(selectUser);
 
 	const orders = useAppSelector(selectOrdersCRM);
 
 	const [statusFilter, setStatusFilter] = useState('ALL');
 	const [emailFilter, setEmailFilter] = useState('');
 	const [nameFilter, setNameFilter] = useState('');
-	const [sortAsc, setSortAsc] = useState(true);
+
+	const columns: GridColDef<OrderRow>[] = [
+		{
+			field: 'user',
+			headerName: 'Клиент',
+			flex: 1,
+			renderCell: ({ row }) => <span>{row.user.name}</span>,
+		},
+		{
+			field: 'email',
+			headerName: 'Email',
+			flex: 1,
+			renderCell: ({ row }) => <span>{row.user.email}</span>,
+		},
+		{
+			field: 'phone',
+			headerName: 'Телефон',
+			flex: 1,
+			renderCell: ({ row }) => <span>{row.user.phone}</span>,
+		},
+		{
+			field: 'car',
+			headerName: 'Авто',
+			flex: 1.5,
+			renderCell: ({ row }) => (
+				<p style={{ margin: 0 }}>
+					{row.modelCar.brand.name} {row.modelCar.name} {row.carYear}
+				</p>
+			),
+		},
+		{ field: 'carColor', headerName: 'Цвет', flex: 1 },
+		{
+			field: 'status',
+			headerName: 'Статус',
+			flex: 1.2,
+			renderCell: ({ row }) => (
+				<FormControl fullWidth size="small">
+					<Select
+						value={row.status}
+						onChange={e => handleStatusChange(row.id, e.target.value)}
+					>
+						{statusOptions
+							.filter(status => status !== 'ALL')
+							.map(status => (
+								<MenuItem key={status} value={status}>
+									{status}
+								</MenuItem>
+							))}
+					</Select>
+				</FormControl>
+			),
+		},
+		{
+			field: 'createdAt',
+			headerName: 'Создан',
+			flex: 1.2,
+			renderCell: ({ row }) => (
+				<span>{new Date(row.createdAt).toLocaleString()}</span>
+			),
+		},
+		{
+			field: 'actions',
+			headerName: 'Действия',
+			flex: 1,
+			renderCell: ({ row }) => (
+				<Box sx={{ display: 'flex', gap: 1 }}>
+					{user?.role === 'ADMIN' && (
+						<Tooltip title="Редактировать">
+							<IconButton
+								onClick={() =>
+									router(`${ROUTES.DASHBOARD_ORDER_EDIT}/${row.id}`)
+								}
+							>
+								<EditIcon />
+							</IconButton>
+						</Tooltip>
+					)}
+					<Tooltip title="Подробнее">
+						<IconButton
+							onClick={() => router(`${ROUTES.DASHBOARD_ORDER_INFO}/${row.id}`)}
+						>
+							<InfoIcon />
+						</IconButton>
+					</Tooltip>
+				</Box>
+			),
+		},
+	];
 
 	const handleStatusChange = async (orderId: string, newStatus: string) => {
 		await dispatch(changeOrderStatus({ status: newStatus, id: orderId }));
-
 		showSnackbar('Статус обновлен', 'success');
 		dispatch(fetchOrdersCRM());
 	};
 
 	const filteredOrders = useMemo(() => {
-		let result = [...orders];
-
-		if (statusFilter !== 'ALL') {
-			result = result.filter(order => order.status === statusFilter);
-		}
-
-		if (emailFilter.trim()) {
-			result = result.filter(order =>
-				order.user.email.toLowerCase().includes(emailFilter.toLowerCase()),
+		return orders.filter(order => {
+			return (
+				(statusFilter === 'ALL' || order.status === statusFilter) &&
+				order.user.email.toLowerCase().includes(emailFilter.toLowerCase()) &&
+				order.user.name.toLowerCase().includes(nameFilter.toLowerCase())
 			);
-		}
-
-		if (nameFilter.trim()) {
-			result = result.filter(order =>
-				order.user.name.toLowerCase().includes(nameFilter.toLowerCase()),
-			);
-		}
-
-		result.sort((a, b) => {
-			const dateA = new Date(a.createdAt).getTime();
-			const dateB = new Date(b.createdAt).getTime();
-			return sortAsc ? dateA - dateB : dateB - dateA;
 		});
-
-		return result;
-	}, [statusFilter, emailFilter, nameFilter, sortAsc, orders]);
+	}, [statusFilter, emailFilter, nameFilter, orders]);
 
 	return (
 		<Box sx={{ width: '100%', p: 2 }}>
@@ -93,25 +181,25 @@ export function OrdersTableCrm() {
 			<Box
 				sx={{
 					display: 'flex',
-					justifyContent: 'space-between',
-					gap: 2,
 					alignItems: 'center',
+					gap: 2,
 					mb: 2,
 				}}
 			>
-				<TextField
-					select
-					label="Статус"
-					value={statusFilter}
-					onChange={e => setStatusFilter(e.target.value)}
-					size="small"
-				>
-					{statusOptions.map(status => (
-						<MenuItem key={status} value={status}>
-							{status}
-						</MenuItem>
-					))}
-				</TextField>
+				<FormControl size="small" sx={{ minWidth: 150 }}>
+					<InputLabel>Статус</InputLabel>
+					<Select
+						value={statusFilter}
+						label="Статус"
+						onChange={e => setStatusFilter(e.target.value)}
+					>
+						{statusOptions.map(status => (
+							<MenuItem key={status} value={status}>
+								{status}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
 
 				<TextField
 					label="Email"
@@ -126,90 +214,21 @@ export function OrdersTableCrm() {
 					onChange={e => setNameFilter(e.target.value)}
 					size="small"
 				/>
-
-				<Tooltip title={'Сортировка по дате'}>
-					<Button
-						onClick={() => setSortAsc(!sortAsc)}
-						variant="outlined"
-						sx={{ flexWrap: 'nowrap' }}
-					>
-						Дата {sortAsc ? '↑' : '↓'}
-					</Button>
-				</Tooltip>
 			</Box>
 
 			{/* Таблица */}
-			<TableContainer>
-				<Table size="small">
-					<TableHead>
-						<TableRow>
-							<TableCell>Клиент</TableCell>
-							<TableCell>Email</TableCell>
-							<TableCell>Телефон</TableCell>
-							<TableCell>Авто</TableCell>
-							<TableCell>Цвет</TableCell>
-							<TableCell>Статус</TableCell>
-							<TableCell>Создан</TableCell>
-							<TableCell>Действия</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{filteredOrders.map(order => (
-							<TableRow key={order.id}>
-								<TableCell>{order.user.name}</TableCell>
-								<TableCell>{order.user.email}</TableCell>
-								<TableCell>{order.user.phone}</TableCell>
-								<TableCell>{`${order.modelCar.brand.name} ${order.modelCar.name} ${order.carYear}`}</TableCell>
-								<TableCell>{order.carColor}</TableCell>
-								<TableCell>
-									<FormControl fullWidth size="small">
-										<Select
-											value={order.status}
-											onChange={e =>
-												handleStatusChange(order.id, e.target.value)
-											}
-										>
-											{statusOptions
-												.filter(status => status !== 'ALL')
-												.map(status => (
-													<MenuItem key={status} value={status}>
-														{status}
-													</MenuItem>
-												))}
-										</Select>
-									</FormControl>
-								</TableCell>
-								<TableCell>
-									{new Date(order.createdAt).toLocaleString()}
-								</TableCell>
-								<TableCell>
-									<Box sx={{ display: 'flex', gap: 1 }}>
-										<Button
-											size="small"
-											variant="contained"
-											onClick={() =>
-												router(`${ROUTES.DASHBOARD_ORDER_INFO}/${order.id}`)
-											}
-										>
-											Подробнее
-										</Button>
-										<Button
-											size="small"
-											variant="outlined"
-											color="secondary"
-											onClick={() =>
-												router(`${ROUTES.DASHBOARD_ORDER_EDIT}/${order.id}`)
-											}
-										>
-											Редактировать
-										</Button>
-									</Box>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			<Box sx={{ height: 650, width: '100%' }}>
+				<DataGrid<OrderRow>
+					rows={filteredOrders}
+					columns={columns}
+					getRowId={row => row.id}
+					pageSizeOptions={[10, 25, 50]}
+					initialState={{
+						pagination: { paginationModel: { pageSize: 10, page: 0 } },
+					}}
+					disableRowSelectionOnClick
+				/>
+			</Box>
 		</Box>
 	);
 }

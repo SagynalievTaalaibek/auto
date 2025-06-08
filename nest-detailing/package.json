@@ -18,9 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "seed": "ts-node src/prisma/seed.ts"
+    "seed": "ts-node src/prisma/seed.ts",
+    "seed:order": "ts-node src/prisma/seed.order.ts"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.8.0",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^4.0.2",
@@ -35,6 +37,7 @@
     "class-validator": "^0.14.2",
     "connect-redis": "^8.0.3",
     "cookie-parser": "^1.4.7",
+    "date-fns": "^4.1.0",
     "express-session": "^1.18.1",
     "ioredis": "^5.6.1",
     "reflect-metadata": "^0.2.0",
