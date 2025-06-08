@@ -9,6 +9,7 @@ import { Contacts } from '../../pages/client/contacts/contacts.tsx';
 import { Home } from '../../pages/client/home/home.tsx';
 import { OrderProfile } from '../../pages/client/profile/order/order-profile.tsx';
 import { Profile } from '../../pages/client/profile/profile.tsx';
+import { OneService } from '../../pages/client/services/one-service/one-service.tsx';
 import { Services } from '../../pages/client/services/services.tsx';
 import { DashboardAnalytics } from '../../pages/crm/dashboard/dashboard-analytics/dashboard-analytics.tsx';
 import { DashboardInventory } from '../../pages/crm/dashboard/dashboard-inventory/dashboard-inventory.tsx';
@@ -46,6 +47,7 @@ export const router = createBrowserRouter([
 					{ index: true, element: <Home /> },
 					{ path: ROUTES.ABOUT, element: <About /> },
 					{ path: ROUTES.SERVICES_CLIENT, element: <Services /> },
+					{ path: `${ROUTES.SERVICES_CLIENT}/:id`, element: <OneService /> },
 					{ path: ROUTES.CONTACTS, element: <Contacts /> },
 					{ path: ROUTES.LOGIN, element: <Login /> },
 					{ path: ROUTES.REGISTER, element: <Register /> },

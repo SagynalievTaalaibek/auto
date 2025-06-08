@@ -78,6 +78,8 @@ export const API_ROUTES = {
 	INVENTORY_CREATE: '/inventory',
 	INVENTORY_DEDUCT: '/inventory/deduct',
 	INVENTORY_RECEIVE: '/inventory/receive',
+
+	CONTACTS_INFO: '/contact',
 };
 
 export const NAVBAR_URL = [

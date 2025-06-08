@@ -191,6 +191,25 @@ model Inventory {
   @@map("inventory")
 }
 
+model ContactInfo {
+  id           String  @id @default(uuid())
+  title        String
+  subTitle     String  @map("sub_title")
+  address      String
+  phone        String
+  email        String
+  workingHours String  @map("working_hours")
+  telegramUrl  String?
+  whatsappUrl  String?
+  instagramUrl String?
+  mapUrl       String  @map("map_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("contact_info")
+}
+
 // Перечисление статусов заказа
 enum OrderStatus {
   NEW
