@@ -30,6 +30,8 @@ export const ROUTES = {
 	DASHBOARD_SERVICES_INFO: '/crm/dashboard/services/info',
 	DASHBOARD_SERVICES_MAIN_EDIT: '/crm/dashboard/services/main/edit',
 	DASHBOARD_SERVICES_SUB_EDIT: '/crm/dashboard/services/sub/edit',
+
+	DASHBOARD_INVENTORY_ADD: '/crm/dashboard/inventory/add',
 };
 
 export const API_ROUTES = {
@@ -71,6 +73,11 @@ export const API_ROUTES = {
 	ANALYTICS_GET_POPULAR_SERVICE: '/analytics/popular-services',
 	ANALYTICS_GET_DASHBOARD_STATS: '/analytics/dashboard-stats',
 	ANALYTICS_GET_DASHBOARD_ACTIVE: '/analytics/dashboard-active',
+
+	REPORTS_GET: '/reports',
+	INVENTORY_CREATE: '/inventory',
+	INVENTORY_DEDUCT: '/inventory/deduct',
+	INVENTORY_RECEIVE: '/inventory/receive',
 };
 
 export const NAVBAR_URL = [

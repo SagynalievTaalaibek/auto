@@ -12,6 +12,7 @@ import { Profile } from '../../pages/client/profile/profile.tsx';
 import { Services } from '../../pages/client/services/services.tsx';
 import { DashboardAnalytics } from '../../pages/crm/dashboard/dashboard-analytics/dashboard-analytics.tsx';
 import { DashboardInventory } from '../../pages/crm/dashboard/dashboard-inventory/dashboard-inventory.tsx';
+import { InventoryAdd } from '../../pages/crm/dashboard/dashboard-inventory/inventory-add/inventory-add.tsx';
 import { DashboardOrdersAdd } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-add/dashboard-orders-add.tsx';
 import { DashboardOrdersEdit } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-edit/dashboard-orders-edit.tsx';
 import { DashboardOrdersInfo } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-info/dashboard-orders-info.tsx';
@@ -133,6 +134,15 @@ export const router = createBrowserRouter([
 						element: (
 							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
 								<DashboardInventory />
+							</ProtectedRoute>
+						),
+					},
+
+					{
+						path: ROUTES.DASHBOARD_INVENTORY_ADD,
+						element: (
+							<ProtectedRoute roles={['ADMIN', 'MASTER']}>
+								<InventoryAdd />
 							</ProtectedRoute>
 						),
 					},

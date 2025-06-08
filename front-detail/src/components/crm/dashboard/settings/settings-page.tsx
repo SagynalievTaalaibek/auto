@@ -4,10 +4,8 @@ import { Edit as EditIcon, Email, Phone } from '@mui/icons-material';
 import {
 	Box,
 	Button,
-	FormControlLabel,
 	Paper,
 	Stack,
-	Switch,
 	TextField,
 	Typography,
 } from '@mui/material';
@@ -17,18 +15,12 @@ export function SettingsPage() {
 	const [centerName, setCenterName] = useState('Детейлинг Центр');
 	const [logoUrl, setLogoUrl] = useState('');
 	const [workingHours, setWorkingHours] = useState('9:00 - 18:00');
-	const [notificationEmail, setNotificationEmail] =
-		useState('notify@example.com');
-	const [notificationTelegram, setNotificationTelegram] = useState(false);
 
 	const handleSave = () => {
-		// Здесь логика сохранения настроек, пока просто лог
 		console.log({
 			centerName,
 			logoUrl,
 			workingHours,
-			notificationEmail,
-			notificationTelegram,
 		});
 	};
 
@@ -82,29 +74,6 @@ export function SettingsPage() {
 						</IconButton>
 					</Stack>
 				</Stack>
-			</Paper>
-
-			<Paper sx={{ p: 3, mb: 4 }}>
-				<Typography variant="h6" mb={2}>
-					Настройки уведомлений
-				</Typography>
-				<Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-					<TextField
-						label="Email для уведомлений"
-						value={notificationEmail}
-						onChange={e => setNotificationEmail(e.target.value)}
-						fullWidth
-					/>
-					<FormControlLabel
-						control={
-							<Switch
-								checked={notificationTelegram}
-								onChange={e => setNotificationTelegram(e.target.checked)}
-							/>
-						}
-						label="Telegram-уведомления"
-					/>
-				</Box>
 			</Paper>
 
 			<Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>

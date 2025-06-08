@@ -41,22 +41,29 @@ export class AnalyticsService {
 			include: { orderServices: { include: { service: true } } }
 		});
 
+		const materials = await this.prisma.inventory.findMany({
+			where: { createdAt: { gte: startDate } }
+		});
+
 		const revenue = orders.reduce(
 			(sum, order) => sum + (order.totalPrice || 0),
 			0
 		);
+
 		const ordersCount = orders.length;
 		const averageCheck =
 			ordersCount > 0 ? Math.round(revenue / ordersCount) : 0;
 
-		const warehouseExpenses = Math.round(revenue * 0.3); // Пример: 30% на склад
+		const materialsTotal = materials.reduce((sum, item) => {
+			return sum + item.quantity * item.purchasePrice;
+		}, 0);
 
 		return {
 			period,
 			revenue,
 			ordersCount,
 			averageCheck,
-			warehouseExpenses
+			warehouseExpenses: materialsTotal
 		};
 	}
 
