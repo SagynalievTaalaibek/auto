@@ -25,6 +25,11 @@ export const ROUTES = {
 	DASHBOARD_ORDER_EDIT: '/crm/dashboard/orders/edit',
 	DASHBOARD_ORDER_MY: '/crm/dashboard/orders/my',
 	DASHBOARD_ORDER_ADD: '/crm/dashboard/orders/add',
+
+	DASHBOARD_SERVICES_ADD: '/crm/dashboard/services/add',
+	DASHBOARD_SERVICES_INFO: '/crm/dashboard/services/info',
+	DASHBOARD_SERVICES_MAIN_EDIT: '/crm/dashboard/services/main/edit',
+	DASHBOARD_SERVICES_SUB_EDIT: '/crm/dashboard/services/sub/edit',
 };
 
 export const API_ROUTES = {
@@ -50,8 +55,13 @@ export const API_ROUTES = {
 	ASSIGN_ROLE: '/users/admin/assign-role',
 
 	MAIN_SERVICES_GET: '/services/main-services',
+	MAIN_SERVICES_EDIT: '/services/main-service',
+	MAIN_SERVICES_GET_ONE: '/services',
 	MAIN_SERVICES_CREATE: '/services/main-services',
 	SERVICES_CREATE: '/services',
+	SERVICES_DELETE: '/services',
+	SERVICES_EDIT: '/services',
+	SERVICES_GET_ONE: '/services/service',
 
 	CARS_GET: '/cars',
 	CARS_BODY_TYPE_GET: '/cars/body-type',
