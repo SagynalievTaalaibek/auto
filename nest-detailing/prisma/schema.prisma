@@ -88,8 +88,8 @@ model Order {
 
   photos String[] @default([])
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime?
+  updatedAt DateTime  @updatedAt @map("updated_at")
 
   orderCategories OrderCategory[] // выбранные основные категории
   orderServices   OrderService[] // конкретные подуслуги
@@ -208,6 +208,15 @@ model ContactInfo {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("contact_info")
+}
+
+model Questions {
+  id       String @id @default(uuid())
+  name     String
+  phone    String
+  question String
+
+  @@map("questions")
 }
 
 // Перечисление статусов заказа

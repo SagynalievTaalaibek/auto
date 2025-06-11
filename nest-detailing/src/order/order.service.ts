@@ -53,6 +53,7 @@ export class OrderService {
 				totalPrice,
 				photos: photos ?? [],
 				notes,
+				createdAt: new Date(),
 				orderCategories: {
 					create: orderCategoryIds.map(categoryId => ({
 						category: { connect: { id: categoryId } }
