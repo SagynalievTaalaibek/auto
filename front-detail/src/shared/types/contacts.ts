@@ -10,3 +10,11 @@ export interface ContactsGet {
 	instagramUrl?: string;
 	mapUrl?: string;
 }
+
+export interface QuestionsTableProps {
+	id: string;
+	name: string;
+	phone: string;
+	question: string;
+	createdAt: string;
+}

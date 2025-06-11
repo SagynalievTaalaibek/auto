@@ -20,6 +20,7 @@ export const ROUTES = {
 	DASHBOARD_INVENTORY: '/crm/dashboard/inventory',
 	DASHBOARD_REPORTS: '/crm/dashboard/reports',
 	DASHBOARD_SETTINGS: '/crm/dashboard/settings',
+	DASHBOARD_QUESTION: '/crm/dashboard/questions',
 
 	DASHBOARD_ORDER_INFO: '/crm/dashboard/orders/info',
 	DASHBOARD_ORDER_EDIT: '/crm/dashboard/orders/edit',
@@ -80,6 +81,7 @@ export const API_ROUTES = {
 	INVENTORY_RECEIVE: '/inventory/receive',
 
 	CONTACTS_INFO: '/contact',
+	QUESTION: '/question',
 };
 
 export const NAVBAR_URL = [

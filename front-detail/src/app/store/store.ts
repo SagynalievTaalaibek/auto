@@ -16,6 +16,7 @@ import { authReducer } from '../../features/auth/authSlice.ts';
 import { carsReducer } from '../../features/cars/cars.slice.ts';
 import { inventoryReducer } from '../../features/inventory/inventory.slice.ts';
 import { ordersReducer } from '../../features/orders/orders.slice.ts';
+import { questionReducer } from '../../features/question/question.slice.ts';
 import { reportsReducer } from '../../features/reports/reports.slice.ts';
 import { serviceReducer } from '../../features/services/services.slice.ts';
 import { settingsReducer } from '../../features/settings/settings.slice.ts';
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
 	inventory: inventoryReducer,
 	analytics: analyticsReducer,
 	settings: settingsReducer,
+	question: questionReducer,
 });
 
 export const store = configureStore({
