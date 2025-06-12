@@ -73,7 +73,7 @@ export const router = createBrowserRouter([
 			},
 
 			{
-				path: `${ROUTES.NEW_VERIFICATION}/:token`,
+				path: `${ROUTES.NEW_VERIFICATION}`,
 				element: <NewVerificationPage />,
 			},
 

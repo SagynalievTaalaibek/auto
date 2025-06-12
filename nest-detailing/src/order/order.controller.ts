@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	HttpCode,
 	HttpStatus,
@@ -105,5 +106,12 @@ export class OrderController {
 		}
 
 		return this.orderService.findOne({}, id);
+	}
+
+	@Authorization()
+	@HttpCode(HttpStatus.OK)
+	@Delete(':id')
+	public async delete(@Param('id') id: string) {
+		return this.orderService.delete(id);
 	}
 }

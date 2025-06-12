@@ -12,17 +12,22 @@ import {
 	selectOneOrder,
 	selectOrdersLoading,
 } from '../../../../../features/orders/orders.slice.ts';
-import { fetchOneOrder } from '../../../../../features/orders/orders.thunks.ts';
+import {
+	deleteOrder,
+	fetchOneOrder,
+} from '../../../../../features/orders/orders.thunks.ts';
 import { ROUTES } from '../../../../../shared/constants/constants.ts';
 import {
 	useAppDispatch,
 	useAppSelector,
 } from '../../../../../shared/hooks/hooksStore.ts';
+import { useAppSnackbar } from '../../../../../shared/hooks/useAppSnackbar.tsx';
 
 export const DashboardOrdersInfo = () => {
 	const { id: orderId } = useParams<{ id: string }>();
 	const router = useNavigate();
 	const dispatch = useAppDispatch();
+	const { showSnackbar } = useAppSnackbar();
 	const loading = useAppSelector(selectOrdersLoading);
 	const order = useAppSelector(selectOneOrder);
 	const user = useAppSelector(selectUser);
@@ -63,7 +68,8 @@ export const DashboardOrdersInfo = () => {
 	);
 
 	const onDeleteOrder = async () => {
-		console.log('Удаление заказа:', order.id);
+		await dispatch(deleteOrder({ id: order.id }));
+		showSnackbar('Заказ успешно удален', 'success');
 		router(ROUTES.DASHBOARD_ORDER);
 	};
 

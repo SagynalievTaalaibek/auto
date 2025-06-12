@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
 	eachDayOfInterval,
 	eachMonthOfInterval,
+	endOfDay,
 	endOfWeek,
 	format,
 	startOfDay,
@@ -18,25 +19,36 @@ export class AnalyticsService {
 	constructor(private readonly prisma: PrismaService) {}
 
 	async getPeriodStats(period: 'day' | 'week' | 'month' | 'year') {
-		let startDate = new Date();
+		let startDate: Date;
+		let endDate: Date;
+		const now = new Date();
+
 		switch (period) {
 			case 'day':
-				startDate = startOfDay(new Date());
+				startDate = startOfDay(now);
+				endDate = endOfDay(now);
 				break;
 			case 'week':
-				startDate = subDays(new Date(), 7);
+				startDate = subDays(now, 7);
+				endDate = now;
 				break;
 			case 'month':
-				startDate = subMonths(new Date(), 1);
+				startDate = subMonths(now, 1);
+				endDate = now;
 				break;
 			case 'year':
-				startDate = subYears(new Date(), 1);
+				startDate = subYears(now, 1);
+				endDate = now;
 				break;
 		}
 
 		const orders = await this.prisma.order.findMany({
 			where: {
-				AND: [{ createdAt: { gte: startDate } }, { status: 'COMPLETED' }]
+				AND: [
+					{ createdAt: { gte: startDate } },
+					{ createdAt: { lte: endDate } },
+					{ status: 'COMPLETED' }
+				]
 			},
 			include: { orderServices: { include: { service: true } } }
 		});
@@ -158,12 +170,11 @@ export class AnalyticsService {
 				totalPrice: true
 			},
 			where: {
-				createdAt: {
-					gte: weekAgo
-				},
-				totalPrice: {
-					not: null
-				}
+				AND: [
+					{ createdAt: { gte: weekAgo } },
+					{ totalPrice: { not: null } },
+					{ status: 'COMPLETED' }
+				]
 			}
 		});
 

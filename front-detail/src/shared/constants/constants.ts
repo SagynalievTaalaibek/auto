@@ -52,6 +52,7 @@ export const API_ROUTES = {
 	ORDER_GET_ONE: '/orders',
 	ORDER_UPDATE: '/orders',
 	ORDER_UPDATE_STATUS: '/orders/status',
+	ORDER_DELETE: '/orders',
 
 	USERS_GET_CRM: '/users',
 	USERS_GET_MASTERS: '/users/master',
