@@ -19,6 +19,7 @@ import { DashboardOrdersEdit } from '../../pages/crm/dashboard/dashboard-orders/
 import { DashboardOrdersInfo } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-info/dashboard-orders-info.tsx';
 import { DashboardOrdersMy } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders-my/dashboard-orders-my.tsx';
 import { DashboardOrders } from '../../pages/crm/dashboard/dashboard-orders/dashboard-orders.tsx';
+import { DashboardQuestion } from '../../pages/crm/dashboard/dashboard-question/dashboard-question.tsx';
 import { DashboardReports } from '../../pages/crm/dashboard/dashboard-reports/dashboard-reports.tsx';
 import { DashboardServicesAdd } from '../../pages/crm/dashboard/dashboard-services/dashboard-services-add/dashboard-services-add.tsx';
 import { DashboardServicesInfo } from '../../pages/crm/dashboard/dashboard-services/dashboard-services-info/dashboard-services-info.tsx';
@@ -72,7 +73,7 @@ export const router = createBrowserRouter([
 			},
 
 			{
-				path: `${ROUTES.NEW_VERIFICATION}/:token`,
+				path: `${ROUTES.NEW_VERIFICATION}`,
 				element: <NewVerificationPage />,
 			},
 
@@ -217,6 +218,14 @@ export const router = createBrowserRouter([
 						element: (
 							<ProtectedRoute roles={['ADMIN']}>
 								<DashboardSettings />
+							</ProtectedRoute>
+						),
+					},
+					{
+						path: ROUTES.DASHBOARD_QUESTION,
+						element: (
+							<ProtectedRoute roles={['ADMIN']}>
+								<DashboardQuestion />
 							</ProtectedRoute>
 						),
 					},

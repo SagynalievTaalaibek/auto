@@ -3,8 +3,10 @@ import type { AxiosError } from 'axios';
 
 import axiosApi from '../../shared/config/axiosApi.ts';
 import { API_ROUTES } from '../../shared/constants/constants.ts';
-import type { TypeOrderProfileSchema } from '../../shared/schemas';
-import type { TypeOrderCRMSchema } from '../../shared/schemas/order.create.crm.schema.ts';
+import type {
+	TypeOrderCRMSchema,
+	TypeOrderProfileSchema,
+} from '../../shared/schemas';
 import type { ErrorResponse } from '../../shared/types/error.ts';
 import type {
 	IOrder,
@@ -173,6 +175,25 @@ export const updateOrder = createAsyncThunk<undefined, UpdateOrderProps>(
 
 			return rejectWithValue(
 				axiosError.response?.data?.message || 'UPDATE ORDER FAILED',
+			);
+		}
+	},
+);
+
+export const deleteOrder = createAsyncThunk<undefined, { id: string }>(
+	'orders/deleteOrder',
+	async ({ id }, { rejectWithValue, dispatch }) => {
+		try {
+			await axiosApi.delete(`${API_ROUTES.ORDER_DELETE}/${id}`);
+		} catch (error: unknown) {
+			const axiosError = error as AxiosError<ErrorResponse>;
+
+			if (axiosError?.response?.status === 401) {
+				dispatch(logout());
+			}
+
+			return rejectWithValue(
+				axiosError.response?.data?.message || 'DELETE ORDER FAILED',
 			);
 		}
 	},

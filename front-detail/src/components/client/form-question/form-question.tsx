@@ -9,6 +9,8 @@ import {
 	TextField,
 } from '@mui/material';
 
+import { createQuestion } from '../../../features/question/question.thunks.ts';
+import { useAppDispatch } from '../../../shared/hooks/hooksStore.ts';
 import { useAppSnackbar } from '../../../shared/hooks/useAppSnackbar.tsx';
 import { QuestionSchema } from '../../../shared/schemas/question.schema.ts';
 
@@ -18,6 +20,7 @@ interface Props {
 }
 
 export const FormQuestion = (props: Props) => {
+	const dispatch = useAppDispatch();
 	const { showSnackbar } = useAppSnackbar();
 	const [formData, setFormData] = useState({
 		name: '',
@@ -32,7 +35,7 @@ export const FormQuestion = (props: Props) => {
 		setErrors(prev => ({ ...prev, [e.target.name]: '' }));
 	};
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		const result = QuestionSchema.safeParse(formData);
 
 		if (!result.success) {
@@ -46,7 +49,7 @@ export const FormQuestion = (props: Props) => {
 			return;
 		}
 
-		console.log('Submitted:', result.data);
+		await dispatch(createQuestion(result.data));
 		props.setOpen(false);
 		showSnackbar('Вопрос успешна отправлен', 'success');
 		setFormData({ name: '', phone: '', question: '' });

@@ -101,6 +101,7 @@ export class OrderService {
 				carYear,
 				bodyTypeId,
 				notes,
+				createdAt: new Date(),
 				orderCategories: {
 					create: orderCategoryIds.map(categoryId => ({
 						category: { connect: { id: categoryId } }
@@ -416,5 +417,23 @@ export class OrderService {
 		return {
 			message: 'Статус обновлен'
 		};
+	}
+
+	async delete(id: string) {
+		const order = await this.prismaService.order.findUnique({ where: { id } });
+		if (!order) {
+			throw new NotFoundException('Заказ не найден');
+		}
+
+		await this.prismaService.orderCategory.deleteMany({
+			where: { orderId: id }
+		});
+		await this.prismaService.orderService.deleteMany({
+			where: { orderId: id }
+		});
+
+		await this.prismaService.order.delete({ where: { id } });
+
+		return { message: 'Заказ успешно удалён' };
 	}
 }

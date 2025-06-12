@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Edit as EditIcon, Email, Phone } from '@mui/icons-material';
+import { Edit as EditIcon, Person, Phone } from '@mui/icons-material';
 import { Box, Card, IconButton, Stack, Typography } from '@mui/material';
 
 import { selectUser } from '../../../features/auth/authSlice.ts';
@@ -27,15 +27,15 @@ export function SettingsProfile() {
 					</Typography>
 					<Stack spacing={1}>
 						<Stack direction="row" alignItems="center" spacing={1}>
-							<Phone fontSize="small" />
-							<Typography>{user.phone}</Typography>
+							<Person fontSize="small" />
+							<Typography>{user.name}</Typography>
 							<IconButton size="small">
 								<EditIcon fontSize="small" />
 							</IconButton>
 						</Stack>
 						<Stack direction="row" alignItems="center" spacing={1}>
-							<Email fontSize="small" />
-							<Typography>{user.email}</Typography>
+							<Phone fontSize="small" />
+							<Typography>{user.phone}</Typography>
 							<IconButton size="small">
 								<EditIcon fontSize="small" />
 							</IconButton>

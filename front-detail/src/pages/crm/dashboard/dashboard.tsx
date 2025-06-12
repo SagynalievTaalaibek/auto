@@ -205,7 +205,7 @@ export function Dashboard() {
 								size="large"
 								onClick={() => router(ROUTES.DASHBOARD_SERVICES)}
 							>
-								Записать на услугу
+								Создать услугу
 							</Button>
 						</Paper>
 					</Box>

@@ -1,6 +1,7 @@
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -57,6 +58,11 @@ export function getNavigationByRole(role: UserRole): Navigation {
 			segment: 'crm/dashboard/settings',
 			title: 'Настройка',
 			icon: <SettingsIcon />,
+		},
+		{
+			segment: 'crm/dashboard/questions',
+			title: 'Вопросы',
+			icon: <HelpCenterIcon />,
 		},
 	];
 
