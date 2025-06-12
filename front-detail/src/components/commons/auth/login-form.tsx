@@ -47,7 +47,7 @@ export function LoginForm() {
 			await dispatch(loginUser(values)).unwrap();
 			showSnackbar('Вы успешно вошли!', 'success');
 			setErrors({});
-			router(ROUTES.PROFILE);
+			router(ROUTES.HOME);
 		} catch (err) {
 			console.log(err);
 			showSnackbar('Неверный email или пароль', 'error');
