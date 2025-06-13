@@ -2,10 +2,7 @@ import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { LoadingScreen } from '../../components/ui/loading-screen/loading-screen.tsx';
-import {
-	selectUser,
-	selectUserLoading,
-} from '../../features/auth/authSlice.ts';
+import { selectUser } from '../../features/auth/authSlice.ts';
 import { fetchUser } from '../../features/auth/authThunks.ts';
 import { ROUTES } from '../../shared/constants/constants.ts';
 import {
@@ -23,15 +20,14 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
 	const dispatch = useAppDispatch();
 	const user = useAppSelector(selectUser);
-	const loading = useAppSelector(selectUserLoading);
 
 	useEffect(() => {
-		if (!user && !loading) {
+		if (!user) {
 			dispatch(fetchUser());
 		}
-	}, [user, loading, dispatch]);
+	}, [user, dispatch]);
 
-	if (loading) {
+	if (user === undefined) {
 		return <LoadingScreen />;
 	}
 
